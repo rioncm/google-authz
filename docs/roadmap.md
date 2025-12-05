@@ -7,6 +7,7 @@ Goal: Running locally with minimal functionality and ability to fetch Workspace 
 Deliverables
 	•	Basic FastAPI or lightweight Python service scaffold:
 	•	/health endpoint
+    •   /live endpoint for kubernetes
 	•	Project layout, logging setup, config loading
 	•	Workspace integration:
 	•	Load service account
@@ -40,6 +41,7 @@ Deliverables
 	•	ID token validation
 	•	Build EffectiveAuth from Workspace data on login
 	•	Redis (or memory cache fallback) integration:
+    •   Redis configuration from env settings
 	•	Store EffectiveAuth with TTL
 	•	Internal JWT/session cookie:
 	•	Issue signed internal token after login

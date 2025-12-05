@@ -9,7 +9,9 @@ Deliverables
 		•	ID token validation – verify signature, audience, issuer, nonce; enforce hd or hosted domain.
 		•	Build EffectiveAuth from Workspace data on login – reuse WorkspaceAuthorizationService to hydrate EffectiveAuth immediately after successful login before setting session.
 	•	Redis (or memory cache fallback) integration:
-		•	Connection via url env var (e.g., REDIS_URL=redis://localhost:6379/0). Provide in-memory `dict` cache for local/dev when Redis unavailable.
+        •   Redis configuration from env settings
+		•	Connection via url env var (e.g., REDIS_URL=redis://localhost:6379/0). Provide 
+        in-memory `dict` cache for local/dev when Redis unavailable.
 		•	Store EffectiveAuth with TTL (configurable, default 5 minutes) keyed by user email or internal subject.
 		•	Add cache metrics logging (hit/miss) for debugging.
 	•	Internal JWT/session cookie:

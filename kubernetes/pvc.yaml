@@ -1,0 +1,17 @@
+# my-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  # The name of your PVC. This is how your pods will reference it.
+  name: authz-pvc
+  # The namespace where this PVC will be created. It must match your pod's namespace.
+  namespace: google-authz
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard
+  # resources defines the minimum amount of storage you are requesting.
+  resources:
+    requests:
+      # The size of the volume. Units: Gi (Gibibytes), Mi (Mebibytes), etc.
+      storage: 5Gi

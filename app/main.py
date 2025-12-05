@@ -45,6 +45,11 @@ def health(settings: Settings = Depends(get_app_settings)) -> dict[str, str]:
     return {"status": "ok", "environment": settings.app_env, "version": settings.app_version}
 
 
+@app.get("/live")
+def live() -> dict[str, str]:
+    return {"status": "live"}
+
+
 @app.post("/authz/test", response_model=WorkspaceAuthResponse)
 def get_authorization_profile(
     payload: TestAuthRequest,

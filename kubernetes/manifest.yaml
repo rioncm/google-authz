@@ -1,0 +1,118 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: google-authz-deploy
+  namespace: google-authz
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: google-authz
+  template:
+    metadata:
+      labels:
+        app: google-authz
+    spec:
+      # 1) Prime repo, 2) install deps, then run containers
+      initContainers:
+        - name: git-sync-init
+          image: registry.k8s.io/git-sync/git-sync:v4.4.2
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+          env:
+            - name: GITSYNC_REPO
+              value: https://github.com/YOUR-ORG/google-authz
+            - name: GITSYNC_REF
+              value: main            # branch/tag/commit
+            - name: GITSYNC_ROOT
+              value: /workspace
+            - name: GITSYNC_LINK
+              value: /workspace/repo
+            - name: GITSYNC_DEPTH
+              value: "1"
+            - name: GITSYNC_ONE_TIME
+              value: "true"           # init container: run once
+            - name: GITSYNC_VERBOSE
+              value: "9"
+          volumeMounts:
+            - name: app-code
+              mountPath: /workspace
+      containers:
+        - name: google-authz-app
+          image: ghcr.io/your-org/google-authz:0.2.0
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: PATH
+              value: /venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+            - name: REDIS_LOCATION
+              value: sidecar # app code var; sidecar or external. external requires user and pass
+            - name: REDIS_HOST
+              value: localhost
+            - name: REDIS_PORT
+              value: "6379"
+          envFrom:
+            - secretRef:
+                name: authz-env-secret
+          ports:
+            - containerPort: 8000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /live
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          volumeMounts:
+            - name: app-code
+              mountPath: /workspace
+            - name: google-credentials
+              mountPath: /etc/credentials.json
+              subPath: credentials.json
+              
+        - name: git-sync
+          image: registry.k8s.io/git-sync/git-sync:v4.4.2
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+          envFrom:
+            - secretRef:
+                name: git-sync-credentials
+          env:
+            - name: GITSYNC_REPO
+              value: https://github.com/YOUR-ORG/google-authz
+            - name: GITSYNC_REF
+              value: main
+            - name: GITSYNC_ROOT
+              value: /workspace
+            - name: GITSYNC_LINK
+              value: /workspace/repo
+            - name: GITSYNC_DEPTH
+              value: "1"
+            - name: GITSYNC_PERIOD
+              value: 10s               # sidecar: keep syncing
+            - name: GITSYNC_VERBOSE
+              value: "9"
+          volumeMounts:
+            - name: app-code
+              mountPath: /workspace
+        - name: redis
+          image: redis:7.0.11-alpine
+          ports:
+            - containerPort: 6379
+      volumes:
+        - name: app-code
+          persistentVolumeClaim:
+            claimName: authz-pvc
+        - name: google-credentials
+          secret:
+            secretName: google-service-secret
+            
+
+
