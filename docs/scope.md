@@ -53,8 +53,10 @@ Provide helpers, middleware, and a Python integration library so code in the too
 3.3 Authorization Data Ingestion
 	•	Using a Workspace service account with domain-wide delegation and the Admin SDK, retrieve:
 	•	Full user profile (minimal required fields),
-	•	Custom attributes within the Authorization schema (e.g., Home Department, User Functions, Department Manager),
+	•	Custom attributes within the Authorization schema (e.g., Core Team, Permission, Manager),
+	•	The standard EmployeeInfo schema (Employee ID, Job Title, Employment Type, Manager Email, Department, Cost Center),
 	•	Group membership for the user.
+	•	Base Directory scopes always include the Authorization schema (configurable via `GOOGLE_WORKSPACE_AUTH_SCHEMA`) and the Google-provided `EmployeeInfo` schema. Deployments may append additional read-only Directory scopes using the `ADDITIONAL_SCOPES` environment variable when more schemas are required.
 	•	Fetch this data:
 	•	At login time,
 	•	Optionally when cache entries expire,
@@ -96,16 +98,34 @@ Provide a minimal interface for the tools app and internal services:
 Backend Helpers
 	•	get_current_user() → returns EffectiveAuth
 	•	require_permission("module:action") → decorator/middleware for protecting routes
+	•	/session (GET) → returns EffectiveAuth + session metadata for frontend hydration
+	•	/session/refresh (POST) → forces cache refresh; requires allowed Origin header
 
 HTTP contract for internal apps
 	•	The tools backend and other internal services may:
 	•	Read internal JWTs and derive EffectiveAuth, or
-	•	Request EffectiveAuth via the standalone AuthZ endpoint.
+	•	Request EffectiveAuth via the standalone `/authz` endpoint (ID token or internal session) or ask the service to enforce a permission via `/authz/check` (module + RBAC verb).
 
 Health Endpoint
 	•	/health confirms:
 	•	Auth service is running,
 	•	Cache/Redis connectivity is healthy.
+
+⸻
+
+3.7 Frontend Session UX
+	•	`GET /session` returns EffectiveAuth + session metadata (issued/expiry/refresh hint) for React/Vite hydration.
+	•	`POST /session/refresh` forces a cache refresh when TTL is low; requires an allowed Origin header and JSON body.
+	•	Session cookies default to `SameSite=None; Secure` whenever HTTPS is enabled so cross-subdomain SPAs remain signed in.
+	•	CORS is configurable via `ALLOWED_ORIGINS`—only those origins may invoke session refresh operations.
+
+⸻
+
+3.8 Add-on / Token-Only Flow
+	•	Google Sheets/Docs add-ons obtain a Workspace ID token via Apps Script and call `/authz` or `/authz/check` directly.
+	•	`/authz/check` responses include `permitted_actions` for the requested module so add-ons can cache verbs locally.
+	•	Recommend refresh cadence tied to EffectiveAuth TTL (e.g., re-check every 5 minutes or when Workspace token rotates).
+	•	Documented sequence: token mint → `/authz/check module/action` → act upon granted/denied decision.
 
 ⸻
 
@@ -238,4 +258,3 @@ Operability
 	•	Redis (or equivalent) is available for caching.
 
 ⸻
-

@@ -8,10 +8,11 @@ from googleapiclient.errors import HttpError
 from .config import Settings
 from .models import EffectiveAuth
 
-SCOPES = [
+BASE_SCOPES = [
     "https://www.googleapis.com/auth/admin.directory.group.readonly",
     "https://www.googleapis.com/auth/admin.directory.user.readonly",
 ]
+DEFAULT_CUSTOM_SCHEMAS = ("EmployeeInfo",)
 
 
 class WorkspaceError(Exception):
@@ -33,11 +34,29 @@ class WorkspaceDirectoryClient:
         credentials = service_account.Credentials.from_service_account_file(
             str(settings.google_service_account_file)
         )
-        delegated_credentials = credentials.with_scopes(SCOPES).with_subject(settings.google_delegated_user)
+        scopes = self._build_scopes(settings.additional_scopes)
+        delegated_credentials = credentials.with_scopes(scopes).with_subject(settings.google_delegated_user)
 
         self._settings = settings
         self._logger = logging.getLogger(self.__class__.__name__)
         self._service = build("admin", "directory_v1", credentials=delegated_credentials, cache_discovery=False)
+        self._custom_field_mask = self._build_custom_field_mask()
+
+    def _build_scopes(self, additional_scopes: Sequence[str]) -> List[str]:
+        ordered_scopes: List[str] = []
+        seen = set()
+        for scope in [*BASE_SCOPES, *additional_scopes]:
+            if not scope or scope in seen:
+                continue
+            ordered_scopes.append(scope)
+            seen.add(scope)
+        return ordered_scopes
+
+    def _build_custom_field_mask(self) -> str:
+        schemas = set(DEFAULT_CUSTOM_SCHEMAS)
+        if self._settings.google_auth_schema:
+            schemas.add(self._settings.google_auth_schema)
+        return ",".join(sorted(schemas))
 
     def get_user(self, email: str) -> Dict[str, Any]:
         """Fetch a Workspace user with the configured custom schema."""
@@ -47,7 +66,7 @@ class WorkspaceDirectoryClient:
                 .get(
                     userKey=email,
                     projection="full",
-                    customFieldMask=self._settings.google_auth_schema,
+                    customFieldMask=self._custom_field_mask,
                 )
                 .execute()
             )
@@ -74,9 +93,9 @@ class WorkspaceDirectoryClient:
 class WorkspaceAuthorizationService:
     """Fetch Workspace data and normalize it into EffectiveAuth."""
 
-    HOME_DEPARTMENT_KEY = "HomeDepartment"
-    USER_FUNCTIONS_KEY = "UserFunctions"
-    MANAGER_KEY = "DepartmentManager"
+    CORE_TEAM_KEY = "CoreTeam"
+    PERMISSION_KEY = "Permission"
+    MANAGER_KEY = "Manager"
 
     def __init__(self, client: WorkspaceDirectoryClient, settings: Settings):
         self._client = client
@@ -89,11 +108,11 @@ class WorkspaceAuthorizationService:
         groups = [group["email"] for group in groups_response.get("groups", []) if "email" in group]
 
         custom_schema = self._extract_custom_schema(user)
-        functions = self._coerce_list(custom_schema.get(self.USER_FUNCTIONS_KEY))
+        functions = self._coerce_list(custom_schema.get(self.PERMISSION_KEY))
 
         effective_auth = EffectiveAuth(
             email=user.get("primaryEmail", email).lower(),
-            home_department=self._coerce_scalar(custom_schema.get(self.HOME_DEPARTMENT_KEY)),
+            home_department=self._coerce_scalar(custom_schema.get(self.CORE_TEAM_KEY)),
             is_department_manager=self._coerce_bool(custom_schema.get(self.MANAGER_KEY)),
             functions=functions,
             permissions=self._derive_permissions(functions),

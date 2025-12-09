@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: authz-env-config
+  namespace: google-authz
+data:
+  APP_ENV: "production"
+  APP_VERSION: "0.2.0" # Set via build arguement in Dockerfile
+  LOG_LEVEL: "INFO"
+  HOST: "0.0.0.0"
+  PORT: "8000"
+  APP_MODULE: "app.main:app"
+  REDIS_LOCATION: "sidecar"
+  REDIS_URL: "redis://redis.google-authz:6379/0"
+  EFFECTIVEAUTH_TTL_SECONDS: "300"
+  CACHE_WARM_THRESHOLD_SECONDS: "60"
+  SESSION_COOKIE_NAME: "ga_session"
+  SESSION_TTL_SECONDS: "3600"
+  SESSION_REFRESH_THRESHOLD_SECONDS: "300"
+  ALLOWED_HOSTED_DOMAIN: "pleasantmattress.com"
+  GOOGLE_OAUTH_REDIRECT_URI: "https://auth.example.com/auth/callback"
+  SAMPLE_USER_EMAIL: "sample.user@example.com"

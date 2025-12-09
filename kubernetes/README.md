@@ -5,13 +5,10 @@ These manifests represent a single-namespace deployment that keeps the git repo 
 ## Files
 
 - `namespace.yaml` – Creates the dedicated namespace (`google-authz` by default).
-- `pvc.yaml` – Backs the git-sync volume. Update the `storageClassName` and size to match your cluster.
 - `env-secret.yaml` – Holds non-sensitive configuration (delegated admin email, customer ID, etc.). Replace each placeholder with your real Workspace settings before applying.
 - `google-service-secret.yaml` – Placeholder secret for the Workspace service account JSON. Paste the JSON from `private/…` or create the secret via `kubectl create secret generic google-service-secret --from-file=credentials.json=./private/<file>.json -n google-authz`.
 - `manifest.yaml` – Deployment with:
-  - `git-sync` init container (clones `https://github.com/YOUR-ORG/google-authz`),
   - application container (`ghcr.io/your-org/google-authz:0.2.0` placeholder),
-  - continuous git-sync sidecar (optional; remove if building images elsewhere),
   - Redis sidecar.
 - `ingress.yaml` – Exposes the service via Traefik (`auth.example.com` placeholder host names). Adjust annotations for your ingress controller/TLS issuer.
 
@@ -32,7 +29,6 @@ These manifests represent a single-namespace deployment that keeps the git repo 
 kubectl apply -f kubernetes/namespace.yaml
 kubectl apply -f kubernetes/env-secret.yaml
 kubectl apply -f kubernetes/google-service-secret.yaml   # after populating credentials
-kubectl apply -f kubernetes/pvc.yaml
 kubectl apply -f kubernetes/manifest.yaml
 kubectl apply -f kubernetes/ingress.yaml
 ```

@@ -8,7 +8,7 @@ Deliverables
 		•	/auth/callback token exchange – exchange code for tokens via google-auth-oauthlib, persist ID token + refresh token (if granted) short term for debugging.
 		•	ID token validation – verify signature, audience, issuer, nonce; enforce hd or hosted domain.
 		•	Build EffectiveAuth from Workspace data on login – reuse WorkspaceAuthorizationService to hydrate EffectiveAuth immediately after successful login before setting session.
-	•	Redis (or memory cache fallback) integration:
+	•	Redis via aync and an in memory cache fallback if redis fails or is unavailable:
         •   Redis configuration from env settings
 		•	Connection via url env var (e.g., REDIS_URL=redis://localhost:6379/0). Provide 
         in-memory `dict` cache for local/dev when Redis unavailable.

@@ -1,0 +1,37 @@
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.tmp
+
+# Local environments
+.env
+.venv/
+env/
+venv/
+
+# VCS / tooling
+.git/
+.gitignore
+.build/
+.vscode/
+.idea/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Secrets / local-only
+private/
+*.json
+
+# Test & coverage outputs
+.pytest_cache/
+.mypy_cache/
+coverage.xml
+htmlcov/
+
+# Docker/residual
+*.log
+*.pid

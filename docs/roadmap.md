@@ -56,27 +56,7 @@ Success Criteria
 
 ⸻
 
-v0.3 — Authorization Enforcement
-
-Goal: Permission model enforced in code.
-
-Deliverables
-	•	Permission helpers:
-	•	get_current_user()
-	•	require_permission("module:action") decorator/middleware
-	•	Normalization rules finalized:
-	•	UserFunctions → permissions
-	•	Derived permissions (dept manager flag, etc.) implemented
-	•	Minimal examples in the codebase:
-	•	Protected endpoints requiring a function like shipping:create
-
-Success Criteria
-	•	Requests lacking permissions return 403.
-	•	Internal services or tools app can reliably perform permission checks.
-
-⸻
-
-v0.4 — Standalone Authorization Endpoint
+v0.3 — Standalone Authorization Endpoint
 
 Goal: Allow other internal APIs to retrieve EffectiveAuth without handling login.
 
@@ -86,27 +66,44 @@ Deliverables
 	•	Validates Google token signature & issuer.
 	•	Retrieves EffectiveAuth from cache (or fetches if missing).
 	•	Access limited to internal trusted callers (network-level ACL, shared secret, or mTLS).
+	•	Basic operational guardrails (rate limits, logging) specific to the new endpoint.
 
 Success Criteria
 	•	Another internal service can POST a Workspace ID token to /authz and get back EffectiveAuth.
 
 ⸻
 
-v0.5 — Python Integration Library
+v0.4 — Client Integration Library & Helpers
 
-Goal: Make authorization easy for other microservices.
+Goal: Make authorization and permission checks easy for downstream services without embedding that logic into google-authz itself.
 
 Deliverables
-	•	A small Python library (installable via internal registry):
+	•	A small Python package (internal registry):
 	•	Token validation helper
-	•	Function to fetch EffectiveAuth from google-authz service
-	•	Permission-check helpers
-	•	Basic documentation:
-	•	How to install
-	•	Example usage in another API
+	•	Function to call /authz and return EffectiveAuth
+	•	`get_current_user()` and `require_permission("module:action")` helpers for FastAPI/Flask apps
+	•	Normalization rules documented (e.g., Permission attributes → permissions list, manager flag derivations)
+	•	Example usage snippets and README updates
 
 Success Criteria
 	•	A second API can integrate with google-authz using only the library and minimal custom code.
+	•	Permission checks happen inside client apps via the shared helpers.
+
+⸻
+
+v0.5 — Authorization Patterns & Samples
+
+Goal: Demonstrate consistent, enforced authorization flows using the integration library.
+
+Deliverables
+	•	Reference implementations showing:
+	•	Protecting endpoints with `require_permission`
+	•	Handling derived permissions (dept manager flag, etc.) through configuration
+	•	End-to-end tests that exercise 403 responses when permissions are missing
+	•	Playbook documentation describing how internal teams should model permissions/custom attributes
+
+Success Criteria
+	•	Internal services or tools app can rely on documented patterns to implement permission enforcement confidently.
 
 ⸻
 

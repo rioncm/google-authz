@@ -1,61 +1,56 @@
-# --- Base image with Python runtime ---
+# syntax=docker/dockerfile:1.5
+
 FROM python:3.12-slim AS base
 
-# Set workdir inside the container
-WORKDIR /app
-
-# Avoid Python bytecode / buffering
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
+ # Default value; can be overridden at build time
+ARG APP_VERSION=0.0.0
+LABEL version="$APP_VERSION"
 
-# Install system packages needed by pip & runtime
-# (curl just for debugging; you can drop it if you like)
+WORKDIR /app
+
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         build-essential \
         curl \
+        libffi-dev \
+        libssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# --- Dependencies layer ---
 FROM base AS deps
 
-# Copy only requirements to leverage Docker layer caching
 COPY requirements.txt .
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
-# --- Runtime image ---
 FROM base AS runtime
 
-# Create a non-root user
-RUN useradd -m appuser
+ENV PATH="/home/appuser/.local/bin:${PATH}" \
+    PYTHONPATH="/app" \
+    GOOGLE_APPLICATION_CREDENTIALS="/secrets/sa.json" \
+    APP_MODULE="app.main:app" \
+    WEB_CONCURRENCY="4" \
+    GUNICORN_TIMEOUT="60" \
+    HOST="0.0.0.0" \
+    PORT="8000" \
+    APP_VERSION=$APP_VERSION
 
-# Copy installed Python packages from deps layer
+RUN useradd --create-home --shell /bin/bash appuser
+
 COPY --from=deps /usr/local/lib/python3.12 /usr/local/lib/python3.12
 COPY --from=deps /usr/local/bin /usr/local/bin
 
-# Copy the application code
-COPY . /app
+COPY app ./app
+COPY docs ./docs
+COPY kubernetes ./kubernetes
+COPY requirements.txt .
 
-# Make sure we run as non-root
+RUN chown -R appuser:appuser /app
+
 USER appuser
 
-# Expose the port your app listens on
 EXPOSE 8000
 
-# ENV for Google creds
-# At runtime you'll mount the JSON key to this path
-# e.g. docker run -v /path/to/sa.json:/secrets/sa.json:ro -e GOOGLE_APPLICATION_CREDENTIALS=/secrets/sa.json ...
-ENV GOOGLE_APPLICATION_CREDENTIALS=/secrets/sa.json
-
-# Optional: other envs
-# ENV GOOGLE_ADMIN_DELEGATED_USER=admin@pminc.me
-# ENV APP_ENV=production
-
-# Start the app with Gunicorn + Uvicorn worker
-# Adjust "app.main:app" to your actual module:app
-CMD ["gunicorn", "app.main:app", \
-     "-k", "uvicorn.workers.UvicornWorker", \
-     "--bind", "0.0.0.0:8000", \
-     "--workers", "4", \
-     "--timeout", "60"]
+CMD ["sh", "-c", "gunicorn ${APP_MODULE} -k uvicorn.workers.UvicornWorker --bind ${HOST}:${PORT} --workers ${WEB_CONCURRENCY} --timeout ${GUNICORN_TIMEOUT}"]
