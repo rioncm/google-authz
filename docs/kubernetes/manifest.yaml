@@ -1,0 +1,58 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: google-authz-deploy
+  namespace: google-authz
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: google-authz
+  template:
+    metadata:
+      labels:
+        app: google-authz
+    spec:
+      containers:
+        - name: google-authz-app
+          image: harbor.pminc.me/priv/google-authz:latest # Argo updates this tag when deploying
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: PATH
+              value: /venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+          envFrom:
+            - secretRef:
+                name: authz-env-secret
+            - configMapRef:
+                 name: authz-env-config
+          ports:
+            - containerPort: 8000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /live
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          volumeMounts:
+            - name: google-credentials
+              mountPath: /app/credentials
+                        
+        - name: redis
+          image: redis:7.0.11-alpine
+          ports:
+            - containerPort: 6379
+      volumes:
+        - name: google-credentials
+          secret:
+            secretName: google-service-secret
+            
+
+
+

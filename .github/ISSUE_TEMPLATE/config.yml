@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Community Slack
+    url: https://example.com/google-authz-slack
+    about: Join the community channel for quick questions.

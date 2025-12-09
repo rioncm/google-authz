@@ -17,6 +17,7 @@ venv/
 .build/
 .vscode/
 .idea/
+node_modules/
 
 # OS junk
 .DS_Store

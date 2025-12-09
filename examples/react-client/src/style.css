@@ -1,0 +1,35 @@
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 2rem;
+  background: #f8fafc;
+  color: #0f172a;
+}
+main {
+  max-width: 720px;
+  margin: 0 auto;
+}
+button {
+  margin-right: 1rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  border: none;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+}
+button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+pre {
+  background: #0f172a;
+  color: #ecfeff;
+  padding: 1rem;
+  border-radius: 8px;
+  overflow: auto;
+}
+.error {
+  background: #fee2e2;
+  color: #991b1b;
+}
