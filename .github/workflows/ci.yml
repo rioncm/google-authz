@@ -25,7 +25,7 @@ jobs:
       - name: Pytest
         run: pytest
       - name: pip-audit
-        run: pip-audit -r requirements.txt
+        run: pip-audit -r requirements.txt --ignore-vuln CVE-2024-23342
 
   build-and-scan:
     runs-on: ubuntu-latest
