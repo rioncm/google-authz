@@ -26,6 +26,7 @@ Thumbs.db
 # Secrets / local-only
 private/
 *.json
+*.code-workspace
 
 # Test & coverage outputs
 .pytest_cache/
