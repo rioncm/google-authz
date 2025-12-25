@@ -16,6 +16,8 @@ class NetworkACL:
         self._load(entries)
 
     def _load(self, entries: Sequence[str]) -> None:
+        if isinstance(entries, str):
+            entries = [part.strip() for part in entries.split(",") if part.strip()]
         for entry in entries:
             normalized = (entry or "").strip()
             if not normalized:
@@ -73,4 +75,3 @@ class NetworkACL:
             if int(start_ip) <= int(ip) <= int(end_ip):
                 return True
         return False
-

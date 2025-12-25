@@ -10,6 +10,13 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 load_dotenv()
 
 
+def _split_env_list(name: str, default: str = "") -> List[str]:
+    raw = os.getenv(name, default)
+    if not raw:
+        return []
+    return [part.strip() for part in raw.split(",") if part.strip()]
+
+
 class Settings(BaseModel):
     """Central application configuration."""
 
@@ -28,11 +35,13 @@ class Settings(BaseModel):
     google_delegated_user: Optional[str] = Field(default=os.getenv("GOOGLE_WORKSPACE_DELEGATED_USER"))
     google_customer_id: Optional[str] = Field(default=os.getenv("GOOGLE_WORKSPACE_CUSTOMER_ID"))
     google_auth_schema: str = Field(default=os.getenv("GOOGLE_WORKSPACE_AUTH_SCHEMA", "Authorization"))
-    additional_scopes: List[str] = Field(default=os.getenv("ADDITIONAL_SCOPES", ""))
-    allowed_origins: List[str] = Field(default=os.getenv("ALLOWED_ORIGINS", ""))
+    additional_scopes: List[str] = Field(default_factory=lambda: _split_env_list("ADDITIONAL_SCOPES"))
+    allowed_origins: List[str] = Field(default_factory=lambda: _split_env_list("ALLOWED_ORIGINS"))
 
     request_timeout_seconds: int = Field(default=int(os.getenv("WORKSPACE_REQUEST_TIMEOUT", "30")))
-    authz_allowed_networks: List[str] = Field(default=os.getenv("AUTHZ_ALLOWED_NETWORKS", "0.0.0.0/0"))
+    authz_allowed_networks: List[str] = Field(
+        default_factory=lambda: _split_env_list("AUTHZ_ALLOWED_NETWORKS", "0.0.0.0/0")
+    )
     authz_rate_limit_requests: int = Field(default=int(os.getenv("AUTHZ_RATE_LIMIT_REQUESTS", "60")))
     authz_rate_limit_window_seconds: int = Field(default=int(os.getenv("AUTHZ_RATE_LIMIT_WINDOW_SECONDS", "60")))
 
