@@ -2,6 +2,14 @@
 
 All notable changes to this project are documented here. The format loosely follows [Keep a Changelog](https://keepachangelog.com/) and adheres to [SemVer](https://semver.org/).
 
+## [Unreleased]
+### Added
+- OAuth access token validation for `/authz` and `/authz/check` via Google tokeninfo/userinfo.
+- Support for multiple allowed OAuth audiences (`GOOGLE_OAUTH_ALLOWED_AUDIENCES`).
+
+### Changed
+- Network ACL parsing now tolerates comma-separated strings without pre-splitting.
+
 ## [0.6.0] - 2024-06-01
 ### Added
 - MIT license, Code of Conduct, Security policy, and contributing guide.
@@ -46,6 +54,7 @@ All notable changes to this project are documented here. The format loosely foll
 - Basic health endpoints and manual `/authz/test` path for exercising Workspace fetches.
 - Local development docs (`docs/scopev0.1.md`) covering `.env` basics and uvicorn workflow.
 
+[Unreleased]: https://github.com/example/google-authz/compare/v0.6.0...HEAD
 [0.6.0]: https://github.com/example/google-authz/releases/tag/v0.6.0
 [0.5.0]: https://github.com/example/google-authz/releases/tag/v0.5.0
 [0.4.0]: https://github.com/example/google-authz/releases/tag/v0.4.0

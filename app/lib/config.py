@@ -48,6 +48,9 @@ class Settings(BaseModel):
     google_oauth_client_id: Optional[str] = Field(default=os.getenv("GOOGLE_OAUTH_CLIENT_ID"))
     google_oauth_client_secret: Optional[str] = Field(default=os.getenv("GOOGLE_OAUTH_CLIENT_SECRET"))
     google_oauth_redirect_uri: Optional[str] = Field(default=os.getenv("GOOGLE_OAUTH_REDIRECT_URI"))
+    google_oauth_allowed_audiences: List[str] = Field(
+        default_factory=lambda: _split_env_list("GOOGLE_OAUTH_ALLOWED_AUDIENCES")
+    )
     allowed_hosted_domain: Optional[str] = Field(default=os.getenv("ALLOWED_HOSTED_DOMAIN"))
     post_login_redirect_url: str = Field(default=os.getenv("POST_LOGIN_REDIRECT_URL", "/me"))
     oauth_state_cookie_name: str = Field(default=os.getenv("OAUTH_STATE_COOKIE_NAME", "ga_oauth_state"))

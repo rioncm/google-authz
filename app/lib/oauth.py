@@ -7,12 +7,15 @@ from fastapi.responses import Response
 from google.auth.transport.requests import Request as GoogleRequest
 from google.oauth2 import id_token
 from google_auth_oauthlib.flow import Flow
+import httpx
 from itsdangerous import BadSignature, BadTimeSignature, URLSafeTimedSerializer
 
 from app.lib.config import Settings
 
 CookieSameSite = Literal["lax", "strict", "none"]
 ALLOWED_SAMESITE_VALUES: Tuple[CookieSameSite, ...] = ("lax", "strict", "none")
+TOKENINFO_URL = "https://oauth2.googleapis.com/tokeninfo"
+USERINFO_URL = "https://openidconnect.googleapis.com/v1/userinfo"
 
 
 class OAuthState:
@@ -119,21 +122,35 @@ class OAuthService:
         if not credential_id_token:
             raise HTTPException(status_code=400, detail="Missing ID token in OAuth response.")
         request = GoogleRequest()
+        audiences = self._allowed_audiences()
         token_info = id_token.verify_oauth2_token(
             credential_id_token,
             request,
-            self._settings.google_oauth_client_id,
+            audiences[0] if len(audiences) == 1 else audiences,
         )
         return self._validate_token_info(token_info, expected_state)
 
     def verify_id_token(self, raw_token: str) -> Dict[str, str]:
         request = GoogleRequest()
+        audiences = self._allowed_audiences()
         token_info = id_token.verify_oauth2_token(
             raw_token,
             request,
-            self._settings.google_oauth_client_id,
+            audiences[0] if len(audiences) == 1 else audiences,
         )
         return self._validate_token_info(token_info, None)
+
+    def verify_access_token(self, raw_token: str) -> Dict[str, str]:
+        token_info = self._fetch_access_token_info(raw_token)
+        email = token_info.get("email")
+        if not email:
+            userinfo = self._fetch_userinfo(raw_token)
+            token_info.update({k: v for k, v in userinfo.items() if v is not None})
+            email = token_info.get("email")
+        if not email:
+            raise HTTPException(status_code=401, detail="Access token missing email.")
+        self._validate_access_token_info(token_info)
+        return token_info
 
     def _validate_token_info(self, token_info: Dict[str, str], expected_state: Optional[OAuthState]) -> Dict[str, str]:
         hosted_domain = token_info.get("hd")
@@ -147,6 +164,38 @@ class OAuthService:
             if token_nonce and token_nonce != expected_state.nonce:
                 raise HTTPException(status_code=400, detail="OAuth nonce mismatch.")
         return token_info
+
+    def _validate_access_token_info(self, token_info: Dict[str, str]) -> None:
+        email = token_info.get("email") or ""
+        if self._settings.allowed_hosted_domain:
+            domain = email.split("@")[-1] if "@" in email else ""
+            if domain != self._settings.allowed_hosted_domain:
+                raise HTTPException(status_code=403, detail="Workspace domain is not allowed.")
+
+    def _fetch_access_token_info(self, raw_token: str) -> Dict[str, str]:
+        response = httpx.get(
+            TOKENINFO_URL,
+            params={"access_token": raw_token},
+            timeout=5.0,
+        )
+        if response.status_code != 200:
+            raise HTTPException(status_code=401, detail="Invalid or expired access token.")
+        return response.json()
+
+    def _fetch_userinfo(self, raw_token: str) -> Dict[str, str]:
+        response = httpx.get(
+            USERINFO_URL,
+            headers={"Authorization": f"Bearer {raw_token}"},
+            timeout=5.0,
+        )
+        if response.status_code != 200:
+            return {}
+        return response.json()
+
+    def _allowed_audiences(self) -> list[str]:
+        audiences = [self._settings.google_oauth_client_id or ""]
+        audiences.extend(self._settings.google_oauth_allowed_audiences or [])
+        return [aud for aud in audiences if aud]
 
     @property
     def state_manager(self) -> OAuthStateManager:

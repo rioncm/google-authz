@@ -86,11 +86,13 @@ class TestAuthRequest(BaseModel):
 class AuthzTokenPayload(BaseModel):
     id_token: str | None = None
     session_token: str | None = None
+    access_token: str | None = None
 
     @model_validator(mode="after")
     def validate_token_choice(self):
-        if bool(self.id_token) == bool(self.session_token):
-            raise ValueError("Provide exactly one of id_token or session_token.")
+        tokens = [bool(self.id_token), bool(self.session_token), bool(self.access_token)]
+        if sum(tokens) != 1:
+            raise ValueError("Provide exactly one of id_token, session_token, or access_token.")
         return self
 
 
@@ -323,6 +325,24 @@ def resolve_identity_from_payload(
             ) from exc
         cache_key = session.cache_key or cache_key_for_email(session.email)
         return session.email.lower(), cache_key, "session"
+    if payload.access_token:
+        try:
+            token_info = oauth_service.verify_access_token(payload.access_token)
+        except HTTPException:
+            raise
+        except Exception as exc:
+            logger.warning("Access token verification failed: %s", exc)
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail=error_payload("invalid_access_token", "Invalid access token."),
+            ) from exc
+        email = token_info.get("email")
+        if not email:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=error_payload("missing_email_claim", "Access token missing email."),
+            )
+        return email.lower(), cache_key_for_email(email), "access_token"
     if not payload.id_token:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,

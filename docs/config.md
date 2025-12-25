@@ -19,6 +19,7 @@ These variables cover the “final form” of the service: Google Workspace logi
 | `GOOGLE_OAUTH_CLIENT_ID` | Web client ID from Google Cloud console. | `123.apps.googleusercontent.com` |
 | `GOOGLE_OAUTH_CLIENT_SECRET` | Matching client secret (store in Secret). | `super-secret` |
 | `GOOGLE_OAUTH_REDIRECT_URI` | Must match OAuth client (local default `http://localhost:8000/auth/callback`). | `https://auth.example.com/auth/callback` |
+| `GOOGLE_OAUTH_ALLOWED_AUDIENCES` | Optional comma-separated list of additional OAuth client IDs allowed for ID token validation (for example, Apps Script client IDs you control). | `123.apps.googleusercontent.com,456.apps.googleusercontent.com` |
 | `ALLOWED_HOSTED_DOMAIN` | Restrict logins to Workspace domain. | `pleasantmattress.com` |
 
 ## Workspace / Admin SDK
@@ -57,6 +58,11 @@ These variables cover the “final form” of the service: Google Workspace logi
 | `AUTHZ_ALLOWED_NETWORKS` | IPv4 network ACL for `/authz` endpoints. Supports `*`/`0.0.0.0/0` (allow all), CIDRs (`10.0.0.0/16`), single hosts (`10.42.0.5`), comma-separated lists, and ranges using `start|end`. Defaults to open access—lock down in production. | `10.42.0.0/16,10.10.5.12,192.168.1.10|192.168.1.20` |
 | `AUTHZ_RATE_LIMIT_REQUESTS` | Requests allowed per client IP within the window. | `60` |
 | `AUTHZ_RATE_LIMIT_WINDOW_SECONDS` | Duration of the rate-limit window in seconds. | `60` |
+
+The `/authz` and `/authz/check` endpoints accept exactly one token per request:
+- `id_token` (OpenID ID token)
+- `session_token` (google-authz session token)
+- `access_token` (OAuth access token validated via Google tokeninfo/userinfo)
 
 ## Frontend / CORS
 

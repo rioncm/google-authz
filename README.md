@@ -38,6 +38,8 @@ Core settings live in `.env` and are documented in detail in [`docs/config.md`](
 
 👉 Check [`docs/security.md`](docs/security.md) for secret management guidance and rotation playbooks.
 
+`/authz` and `/authz/check` accept exactly one token per request: `id_token`, `session_token`, or `access_token`.
+
 ## Architecture
 The login and authorization exchange follow a simple set of hops:
 
