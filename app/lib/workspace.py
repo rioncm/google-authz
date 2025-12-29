@@ -40,7 +40,9 @@ class WorkspaceDirectoryClient:
         self._settings = settings
         self._logger = logging.getLogger(self.__class__.__name__)
         self._service = build("admin", "directory_v1", credentials=delegated_credentials, cache_discovery=False)
+        self._extra_schemas = self._normalize_extra_schemas(settings)
         self._custom_field_mask = self._build_custom_field_mask()
+        self._schema_field_types = self._load_schema_field_types()
 
     def _build_scopes(self, additional_scopes: Sequence[str]) -> List[str]:
         ordered_scopes: List[str] = []
@@ -56,7 +58,41 @@ class WorkspaceDirectoryClient:
         schemas = set(DEFAULT_CUSTOM_SCHEMAS)
         if self._settings.google_auth_schema:
             schemas.add(self._settings.google_auth_schema)
+        schemas.update(self._extra_schemas)
         return ",".join(sorted(schemas))
+
+    def _normalize_extra_schemas(self, settings: Settings) -> List[str]:
+        extra = [name.strip() for name in settings.google_workspace_extra_schemas if name and name.strip()]
+        auth_schema = settings.google_auth_schema
+        return [name for name in extra if name != auth_schema]
+
+    def _load_schema_field_types(self) -> Dict[str, Dict[str, Dict[str, object]]]:
+        if not self._extra_schemas:
+            return {}
+        customer_id = self._settings.google_customer_id or "my_customer"
+        try:
+            response = self._service.schemas().list(customerId=customer_id).execute()
+        except HttpError as exc:
+            self._logger.warning("Failed to fetch schema definitions: %s", exc)
+            return {}
+        schemas = response.get("schemas") or []
+        schema_map: Dict[str, Dict[str, Dict[str, object]]] = {}
+        for schema in schemas:
+            schema_name = schema.get("schemaName")
+            if schema_name not in self._extra_schemas:
+                continue
+            fields = schema.get("fields") or []
+            field_map: Dict[str, Dict[str, object]] = {}
+            for field in fields:
+                field_name = field.get("fieldName")
+                if not field_name:
+                    continue
+                field_map[field_name] = {
+                    "type": field.get("fieldType") or "unknown",
+                    "multi": bool(field.get("multiValued")),
+                }
+            schema_map[schema_name] = field_map
+        return schema_map
 
     def get_user(self, email: str) -> Dict[str, Any]:
         """Fetch a Workspace user with the configured custom schema."""
@@ -89,13 +125,19 @@ class WorkspaceDirectoryClient:
             raise WorkspaceError(f"Failed to fetch Workspace groups for {email}") from exc
         return {"groups": groups}
 
+    @property
+    def extra_schemas(self) -> List[str]:
+        return list(self._extra_schemas)
+
+    @property
+    def schema_field_types(self) -> Dict[str, Dict[str, Dict[str, object]]]:
+        return self._schema_field_types
+
 
 class WorkspaceAuthorizationService:
     """Fetch Workspace data and normalize it into EffectiveAuth."""
 
-    CORE_TEAM_KEY = "CoreTeam"
-    PERMISSION_KEY = "Permission"
-    MANAGER_KEY = "Manager"
+    RBAC_KEY = "RBAC"
 
     def __init__(self, client: WorkspaceDirectoryClient, settings: Settings):
         self._client = client
@@ -108,21 +150,57 @@ class WorkspaceAuthorizationService:
         groups = [group["email"] for group in groups_response.get("groups", []) if "email" in group]
 
         custom_schema = self._extract_custom_schema(user)
-        functions = self._coerce_list(custom_schema.get(self.PERMISSION_KEY))
+        functions = self._coerce_list(custom_schema.get(self.RBAC_KEY))
+        custom_schemas = self._extract_extra_schemas(user)
 
         effective_auth = EffectiveAuth(
             email=user.get("primaryEmail", email).lower(),
-            home_department=self._coerce_scalar(custom_schema.get(self.CORE_TEAM_KEY)),
-            is_department_manager=self._coerce_bool(custom_schema.get(self.MANAGER_KEY)),
             functions=functions,
             permissions=self._derive_permissions(functions),
             groups=groups,
+            custom_schemas=custom_schemas,
         )
         return effective_auth, user, groups_response
 
     def _extract_custom_schema(self, user: Dict[str, Any]) -> Dict[str, Any]:
         schemas = user.get("customSchemas") or {}
         return schemas.get(self._settings.google_auth_schema, {})
+
+    def _extract_extra_schemas(self, user: Dict[str, Any]) -> Dict[str, Dict[str, Dict[str, object]]]:
+        schemas = user.get("customSchemas") or {}
+        output: Dict[str, Dict[str, Dict[str, object]]] = {}
+        for schema_name in self._client.extra_schemas:
+            schema_payload = schemas.get(schema_name) or {}
+            output[schema_name] = self._normalize_schema_fields(schema_name, schema_payload)
+        return output
+
+    def _normalize_schema_fields(
+        self,
+        schema_name: str,
+        schema_payload: Dict[str, Any],
+    ) -> Dict[str, Dict[str, object]]:
+        field_type_map = self._client.schema_field_types.get(schema_name, {})
+        normalized: Dict[str, Dict[str, object]] = {}
+        for field_name, raw_value in schema_payload.items():
+            values, multi = self._normalize_field_values(raw_value)
+            type_info = field_type_map.get(field_name, {})
+            normalized[field_name] = {
+                "type": type_info.get("type", "unknown"),
+                "multi": type_info.get("multi", multi),
+                "values": values,
+            }
+        return normalized
+
+    def _normalize_field_values(self, value: Any) -> Tuple[List[str], bool]:
+        if value is None:
+            return [], False
+        if isinstance(value, dict) and "values" in value:
+            return self._coerce_list(value.get("values")), True
+        if isinstance(value, list):
+            return self._coerce_list(value), True
+        if isinstance(value, dict) and "value" in value:
+            return self._coerce_list(value.get("value")), False
+        return self._coerce_list(value), False
 
     @staticmethod
     def _coerce_scalar(value: Any) -> Optional[str]:

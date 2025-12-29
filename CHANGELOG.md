@@ -6,9 +6,11 @@ All notable changes to this project are documented here. The format loosely foll
 ### Added
 - OAuth access token validation for `/authz` and `/authz/check` via Google tokeninfo/userinfo.
 - Support for multiple allowed OAuth audiences (`GOOGLE_OAUTH_ALLOWED_AUDIENCES`).
+- Extra Workspace custom schemas returned under `EffectiveAuth.custom_schemas` (`GOOGLE_WORKSPACE_EXTRA_SCHEMAS`).
 
 ### Changed
 - Network ACL parsing now tolerates comma-separated strings without pre-splitting.
+- EffectiveAuth no longer includes `home_department` or `is_department_manager`.
 
 ## [0.6.0] - 2024-06-01
 ### Added

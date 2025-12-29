@@ -69,8 +69,6 @@ Provide helpers, middleware, and a Python integration library so code in the too
 Define a clear, minimal data structure:
 
 email
-home_department
-is_department_manager
 functions          # list of "Module:Action" strings from User Functions
 permissions        # normalized permission codes (e.g., "shipping:create")
 groups             # raw Workspace group emails

@@ -35,6 +35,9 @@ class Settings(BaseModel):
     google_delegated_user: Optional[str] = Field(default=os.getenv("GOOGLE_WORKSPACE_DELEGATED_USER"))
     google_customer_id: Optional[str] = Field(default=os.getenv("GOOGLE_WORKSPACE_CUSTOMER_ID"))
     google_auth_schema: str = Field(default=os.getenv("GOOGLE_WORKSPACE_AUTH_SCHEMA", "Authorization"))
+    google_workspace_extra_schemas: List[str] = Field(
+        default_factory=lambda: _split_env_list("GOOGLE_WORKSPACE_EXTRA_SCHEMAS")
+    )
     additional_scopes: List[str] = Field(default_factory=lambda: _split_env_list("ADDITIONAL_SCOPES"))
     allowed_origins: List[str] = Field(default_factory=lambda: _split_env_list("ALLOWED_ORIGINS"))
 

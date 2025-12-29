@@ -54,7 +54,7 @@ The editable SVG lives at [`docs/img/architecture-v0.6.svg`](docs/img/architectu
 
 ## FAQ
 **How do I define custom schemas?**
-: Use the Admin Console to add custom schemas, then surface them through `GOOGLE_WORKSPACE_AUTH_SCHEMA`. The `/authz` response automatically hydrates schema fields so policies can reference them.
+: Use the Admin Console to add a custom schema (for example, `Authorization`) with an `RBAC` field (string, multi value), then set `GOOGLE_WORKSPACE_AUTH_SCHEMA` to that schema name. The `/authz` response hydrates RBAC values into `permissions`. For additional schemas, set `GOOGLE_WORKSPACE_EXTRA_SCHEMAS` to return raw values in `EffectiveAuth.custom_schemas`.
 
 **How do I add new scopes / modules?**
 : Update the JSON schema that drives your RBAC modules, redeploy, and use `/authz/check` to evaluate new `module:action` combinations. Sample DSLs live in [`docs/roadmap.md`](docs/roadmap.md).

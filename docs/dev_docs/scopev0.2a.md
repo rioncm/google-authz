@@ -16,18 +16,9 @@ Allow deployments to specify additional Google Directory API scopes through a co
 - Ensure the combined scopes remain compatible with the existing service account delegation configuration.
 
 ## Data Requirements
-- **EmployeeInfo Schema:** _Add required fields here._
-    - EmployeeID
-    - Job Title
-    - Type of Employee
-    - Managers Email
-    - Deparment
-    - Cost Center
-
 - **Authorization Schema:** _Add required fields here._
-    - Core Team -- string single value
-    - Permission -- string multi value
-    - Manager -- bool
+    - RBAC -- string multi value
+
 
 
 ***Noted Changes***

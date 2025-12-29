@@ -29,9 +29,38 @@ These variables cover the “final form” of the service: Google Workspace logi
 | `GOOGLE_SERVICE_ACCOUNT_FILE` | Path to mounted JSON credentials. | `/etc/credentials.json` |
 | `GOOGLE_WORKSPACE_DELEGATED_USER` | Admin user for domain-wide delegation. | `admin@pleasantmattress.com` |
 | `GOOGLE_WORKSPACE_CUSTOMER_ID` | Workspace customer ID used for Directory API. | `C0123456` |
-| `GOOGLE_WORKSPACE_AUTH_SCHEMA` | Custom schema that holds Home Department, User Functions, etc. | `Authorization` |
+| `GOOGLE_WORKSPACE_AUTH_SCHEMA` | Custom schema that holds RBAC fields used by google-authz. | `Authorization` |
+| `GOOGLE_WORKSPACE_EXTRA_SCHEMAS` | Comma-separated list of additional custom schema names to include in `EffectiveAuth.custom_schemas`. | `HRProfile,Payroll` |
 | `ADDITIONAL_SCOPES` | Comma-separated Directory scopes appended to the defaults (EmployeeInfo + Authorization). Leave blank to use defaults only. | `https://www.googleapis.com/auth/admin.directory.user.readonly` |
 | `WORKSPACE_REQUEST_TIMEOUT` | Seconds to wait on Admin SDK calls. | `30` |
+
+### Custom Schemas (User-Defined)
+
+To add your own schema fields in Google Workspace:
+1. In the Admin Console, create a **custom user schema** (for example, `Authorization`).
+2. Add an `RBAC` field (string, multi value) to store permissions like `bankrec:read`.
+3. Set `GOOGLE_WORKSPACE_AUTH_SCHEMA` to the schema name you created.
+4. Ensure the service account has domain-wide delegation and the Admin SDK scopes are granted.
+
+google-authz always requests the configured auth schema plus the built-in `EmployeeInfo` schema.
+If you need *additional* custom schemas beyond the auth schema, set
+`GOOGLE_WORKSPACE_EXTRA_SCHEMAS` and ensure your service account has access to
+`https://www.googleapis.com/auth/admin.directory.userschema.readonly` (add it to
+`ADDITIONAL_SCOPES`) so field types can be resolved.
+
+When enabled, extra schema fields are returned in `EffectiveAuth.custom_schemas` with a
+consistent shape:
+```
+custom_schemas: {
+  "<SchemaName>": {
+    "<FieldName>": {
+      "type": "<google_type|unknown>",
+      "multi": <bool>,
+      "values": [<string>]
+    }
+  }
+}
+```
 
 ## Redis / EffectiveAuth Cache
 
