@@ -46,7 +46,7 @@ google-authz always requests the configured auth schema plus the built-in `Emplo
 If you need *additional* custom schemas beyond the auth schema, set
 `GOOGLE_WORKSPACE_EXTRA_SCHEMAS` and ensure your service account has access to
 `https://www.googleapis.com/auth/admin.directory.userschema.readonly` (add it to
-`ADDITIONAL_SCOPES`) so field types can be resolved.
+`ADDITIONAL_SCOPES`) so field types can be resolved. As well as in you Google Workspace Domain Wide Deligation settings under Security > API Controls > Domain Wide Delegation.
 
 When enabled, extra schema fields are returned in `EffectiveAuth.custom_schemas` with a
 consistent shape:
