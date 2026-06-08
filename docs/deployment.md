@@ -31,11 +31,14 @@ Reference manifests are published under [`docs/kubernetes/`](kubernetes/README.m
 3. Apply configs + deployment + ingress:
    ```bash
    kubectl apply -f docs/kubernetes/env-config.yaml
+   kubectl apply -f docs/kubernetes/login-apps-config.yaml
    kubectl apply -f docs/kubernetes/env-secret.yaml
    kubectl apply -f docs/kubernetes/manifest.yaml
    kubectl apply -f docs/kubernetes/ingress.yaml
    ```
 4. Point DNS or /etc/hosts at the ingress controller endpoint and run through the login flow.
+
+For browser applications, mount `login-apps-config.yaml` at `/etc/google-authz/login-apps.yaml` or set `LOGIN_APPS_CONFIG_FILE` to the mounted path. See [`docs/browser-app-login.md`](browser-app-login.md).
 
 ### Secrets best practices
 - Prefer external secret managers (GCP Secret Manager, AWS Secrets Manager, Vault) and sync them as Kubernetes secrets using controllers like [External Secrets Operator](https://external-secrets.io/).

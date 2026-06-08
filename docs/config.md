@@ -21,6 +21,9 @@ These variables cover the “final form” of the service: Google Workspace logi
 | `GOOGLE_OAUTH_REDIRECT_URI` | Must match OAuth client (local default `http://localhost:8000/auth/callback`). | `https://auth.example.com/auth/callback` |
 | `GOOGLE_OAUTH_ALLOWED_AUDIENCES` | Optional comma-separated list of additional OAuth client IDs allowed for ID token validation (for example, Apps Script client IDs you control). | `123.apps.googleusercontent.com,456.apps.googleusercontent.com` |
 | `ALLOWED_HOSTED_DOMAIN` | Restrict logins to Workspace domain. | `pleasantmattress.com` |
+| `LOGIN_APPS_CONFIG_FILE` | Optional path to the browser app login registry. Defaults to `/etc/google-authz/login-apps.yaml`. | `/etc/google-authz/login-apps.yaml` |
+
+Browser app login is configured with a YAML registry rather than one env var per app. See [`docs/browser-app-login.md`](browser-app-login.md).
 
 ## Workspace / Admin SDK
 

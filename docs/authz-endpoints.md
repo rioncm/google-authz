@@ -1,6 +1,28 @@
-# /authz and /authz/check Responses
+# AuthZ Endpoint Responses
 
-This document describes the response payloads returned by the authorization endpoints.
+This document describes the response payloads returned by the browser login and authorization endpoints.
+
+## GET /login/app
+
+Starts a browser login flow for a configured first-party application.
+
+Request:
+
+```http
+GET /login/app?app=helpers&redirect_uri=https%3A%2F%2Fhelpers.k8.pminc.me%2F
+```
+
+Behavior:
+
+- Validates `app` against the server-side login app registry.
+- Validates `redirect_uri` against the app's approved redirects.
+- Stores approved app metadata in the signed OAuth state cookie.
+- Redirects to Google OAuth with HTTP 303.
+- On `/auth/callback`, sets the AuthZ session cookie and redirects to the approved app URL.
+
+Invalid app names or redirect URLs return HTTP 400 before Google OAuth begins.
+
+See [`docs/browser-app-login.md`](browser-app-login.md) for registry configuration and consuming app examples.
 
 ## POST /authz
 
@@ -38,6 +60,8 @@ Field notes:
 - `custom_schemas`: Optional passthrough of extra schemas listed in `GOOGLE_WORKSPACE_EXTRA_SCHEMAS`.
 - `fetched_at`: When the EffectiveAuth payload was generated.
 - `source`: One of `cache` or `refreshed`.
+
+When called with `session_token`, `/authz` decodes the signed session token from the browser cookie, resolves the cached or refreshed `EffectiveAuth`, and returns the RBAC data. The session cookie itself does not contain the full RBAC document.
 
 ## POST /authz/check
 

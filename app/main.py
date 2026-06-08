@@ -4,7 +4,7 @@ import random
 from contextlib import asynccontextmanager
 from typing import Dict, List, Tuple
 
-from fastapi import Depends, FastAPI, HTTPException, Request, status
+from fastapi import Depends, FastAPI, HTTPException, Query, Request, status
 from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import JSONResponse, RedirectResponse, Response
 from fastapi.middleware.cors import CORSMiddleware
@@ -12,6 +12,7 @@ from pydantic import BaseModel, field_validator, model_validator
 
 from app.lib.cache import EffectiveAuthCache, CacheRecord, build_cache
 from app.lib.config import Settings, get_settings
+from app.lib.login_apps import LoginAppRegistry
 from app.lib.logging_config import configure_logging
 from app.lib.models import EffectiveAuth, WorkspaceAuthResponse
 from app.lib.oauth import OAuthService, OAuthStateManager
@@ -38,6 +39,7 @@ async def lifespan(app: FastAPI):
     session_manager = SessionManager(settings)
     oauth_state_manager = OAuthStateManager(settings)
     oauth_service = OAuthService(settings, oauth_state_manager)
+    login_app_registry = LoginAppRegistry.from_file(settings.login_apps_config_file)
     network_acl = NetworkACL(settings.authz_allowed_networks or ["0.0.0.0/0"])
     rate_limiter = RateLimiter(settings.authz_rate_limit_requests, settings.authz_rate_limit_window_seconds)
 
@@ -46,6 +48,7 @@ async def lifespan(app: FastAPI):
     app.state.auth_cache = cache
     app.state.session_manager = session_manager
     app.state.oauth_service = oauth_service
+    app.state.login_app_registry = login_app_registry
     app.state.network_acl = network_acl
     app.state.rate_limiter = rate_limiter
 
@@ -168,6 +171,10 @@ def get_session_manager(request: Request) -> SessionManager:
 
 def get_oauth_service(request: Request) -> OAuthService:
     return request.app.state.oauth_service
+
+
+def get_login_app_registry(request: Request) -> LoginAppRegistry:
+    return request.app.state.login_app_registry
 
 
 def get_network_acl(request: Request) -> NetworkACL:
@@ -454,6 +461,29 @@ async def login(oauth_service: OAuthService = Depends(get_oauth_service)) -> Res
     return response
 
 
+@app.get("/login/app")
+async def login_app(
+    app_name: str = Query(..., alias="app"),
+    redirect_uri: str = Query(...),
+    oauth_service: OAuthService = Depends(get_oauth_service),
+    registry: LoginAppRegistry = Depends(get_login_app_registry),
+) -> Response:
+    try:
+        login_app = registry.validate_redirect(app_name, redirect_uri)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    state = oauth_service.state_manager.generate(
+        app=login_app.app,
+        redirect_uri=redirect_uri,
+        session_cookie_domain=login_app.session_cookie_domain,
+    )
+    auth_url = oauth_service.build_authorization_url(state)
+    response = RedirectResponse(url=auth_url, status_code=303)
+    oauth_service.state_manager.save_to_response(response, state)
+    return response
+
+
 @app.get("/auth/callback")
 async def auth_callback(
     request: Request,
@@ -483,8 +513,9 @@ async def auth_callback(
     session = session_manager.create_session(subject=subject, email=effective_auth.email, cache_key=cache_key)
     token = session_manager.encode(session)
 
-    response = RedirectResponse(url=settings.post_login_redirect_url, status_code=303)
-    session_manager.set_cookie(response, token)
+    redirect_url = stored_state.redirect_uri or settings.post_login_redirect_url
+    response = RedirectResponse(url=redirect_url, status_code=303)
+    session_manager.set_cookie(response, token, domain=stored_state.session_cookie_domain)
     oauth_service.state_manager.clear_cookie(response)
     logger.info("Login success for %s (cache key %s)", effective_auth.email, cache_key)
     return response
@@ -495,6 +526,7 @@ async def logout(
     request: Request,
     response: Response,
     cache: EffectiveAuthCache = Depends(get_cache),
+    registry: LoginAppRegistry = Depends(get_login_app_registry),
     session_manager: SessionManager = Depends(get_session_manager),
 ) -> Response:
     token = session_manager.get_token_from_request(request)
@@ -505,6 +537,8 @@ async def logout(
         except Exception:
             logger.warning("Failed to decode session during logout.")
     session_manager.clear_cookie(response)
+    for domain in registry.cookie_domains():
+        session_manager.clear_cookie(response, domain=domain)
     response.status_code = 204
     return response
 

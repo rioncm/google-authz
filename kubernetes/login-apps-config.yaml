@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: authz-login-apps
+  namespace: google-authz
+data:
+  login-apps.yaml: |
+    login_apps:
+      - app: helpers
+        display_name: Little Helpers
+        app_domains:
+          - helpers.pminc.me
+          - helpers.k8.pminc.me
+        app_redirects:
+          - https://helpers.pminc.me/
+          - https://helpers.k8.pminc.me/
+        session_cookie_domain: .pminc.me
+        required_login_permission: helpers:login

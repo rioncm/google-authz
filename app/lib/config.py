@@ -56,6 +56,9 @@ class Settings(BaseModel):
     )
     allowed_hosted_domain: Optional[str] = Field(default=os.getenv("ALLOWED_HOSTED_DOMAIN"))
     post_login_redirect_url: str = Field(default=os.getenv("POST_LOGIN_REDIRECT_URL", "/me"))
+    login_apps_config_file: Path = Field(
+        default=Path(os.getenv("LOGIN_APPS_CONFIG_FILE", "/etc/google-authz/login-apps.yaml"))
+    )
     oauth_state_cookie_name: str = Field(default=os.getenv("OAUTH_STATE_COOKIE_NAME", "ga_oauth_state"))
     oauth_state_ttl_seconds: int = Field(default=int(os.getenv("OAUTH_STATE_TTL_SECONDS", "600")))
 

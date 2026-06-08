@@ -66,7 +66,7 @@ class SessionManager:
             raise SessionError("Session expired")
         return session
 
-    def set_cookie(self, response: Response, token: str) -> None:
+    def set_cookie(self, response: Response, token: str, domain: str | None = None) -> None:
         response.set_cookie(
             key=self._cookie_name,
             value=token,
@@ -75,10 +75,11 @@ class SessionManager:
             samesite=self._samesite,
             max_age=self._ttl,
             path="/",
+            domain=domain,
         )
 
-    def clear_cookie(self, response: Response) -> None:
-        response.delete_cookie(key=self._cookie_name, path="/")
+    def clear_cookie(self, response: Response, domain: str | None = None) -> None:
+        response.delete_cookie(key=self._cookie_name, path="/", domain=domain)
 
     def get_token_from_request(self, request: Request) -> Optional[str]:
         return request.cookies.get(self._cookie_name)

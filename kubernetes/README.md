@@ -6,6 +6,7 @@ These manifests represent a single-namespace deployment that keeps the git repo 
 
 - `namespace.yaml` – Creates the dedicated namespace (`google-authz` by default).
 - `env-secret.yaml` – Holds non-sensitive configuration (delegated admin email, customer ID, etc.). Replace each placeholder with your real Workspace settings before applying.
+- `login-apps-config.yaml` – Browser app login registry for `/login/app` redirect validation.
 - `google-service-secret.yaml` – Placeholder secret for the Workspace service account JSON. Paste the JSON from `private/…` or create the secret via `kubectl create secret generic google-service-secret --from-file=credentials.json=./private/<file>.json -n google-authz`.
 - `manifest.yaml` – Deployment with:
   - application container (`ghcr.io/your-org/google-authz:0.2.0` placeholder),
@@ -27,6 +28,8 @@ These manifests represent a single-namespace deployment that keeps the git repo 
 
 ```sh
 kubectl apply -f kubernetes/namespace.yaml
+kubectl apply -f kubernetes/env-config.yaml
+kubectl apply -f kubernetes/login-apps-config.yaml
 kubectl apply -f kubernetes/env-secret.yaml
 kubectl apply -f kubernetes/google-service-secret.yaml   # after populating credentials
 kubectl apply -f kubernetes/manifest.yaml
@@ -37,6 +40,7 @@ kubectl apply -f kubernetes/ingress.yaml
 
 - Swap `YOUR-ORG` repo/image placeholders in `manifest.yaml`.
 - Update hostnames (`auth.example.com`) and TLS secret names in `ingress.yaml`.
+- Update `login-apps-config.yaml` with each first-party browser app id, approved domains, exact redirect URLs, and cookie domain.
 - Provide a Redis connection string if you want to use an external cache instead of the sidecar.
 - Tune readiness/liveness probe paths if the FastAPI endpoints change.
 - Consider using ConfigMaps for non-secret configuration if you prefer not to store it in Secrets.

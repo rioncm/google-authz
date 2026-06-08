@@ -19,9 +19,19 @@ USERINFO_URL = "https://openidconnect.googleapis.com/v1/userinfo"
 
 
 class OAuthState:
-    def __init__(self, state: str, nonce: str) -> None:
+    def __init__(
+        self,
+        state: str,
+        nonce: str,
+        app: str | None = None,
+        redirect_uri: str | None = None,
+        session_cookie_domain: str | None = None,
+    ) -> None:
         self.state = state
         self.nonce = nonce
+        self.app = app
+        self.redirect_uri = redirect_uri
+        self.session_cookie_domain = session_cookie_domain
 
 
 class OAuthStateManager:
@@ -42,11 +52,30 @@ class OAuthStateManager:
             matched_samesite = None
         self._samesite: Optional[CookieSameSite] = matched_samesite
 
-    def generate(self) -> OAuthState:
-        return OAuthState(state=secrets.token_urlsafe(32), nonce=secrets.token_urlsafe(32))
+    def generate(
+        self,
+        *,
+        app: str | None = None,
+        redirect_uri: str | None = None,
+        session_cookie_domain: str | None = None,
+    ) -> OAuthState:
+        return OAuthState(
+            state=secrets.token_urlsafe(32),
+            nonce=secrets.token_urlsafe(32),
+            app=app,
+            redirect_uri=redirect_uri,
+            session_cookie_domain=session_cookie_domain,
+        )
 
     def save_to_response(self, response: Response, state: OAuthState) -> None:
-        token = self._serializer.dumps({"state": state.state, "nonce": state.nonce})
+        payload = {"state": state.state, "nonce": state.nonce}
+        if state.app:
+            payload["app"] = state.app
+        if state.redirect_uri:
+            payload["redirect_uri"] = state.redirect_uri
+        if state.session_cookie_domain:
+            payload["session_cookie_domain"] = state.session_cookie_domain
+        token = self._serializer.dumps(payload)
         response.set_cookie(
             key=self._cookie_name,
             value=token,
@@ -66,7 +95,13 @@ class OAuthStateManager:
             return None
         try:
             payload = self._serializer.loads(token, max_age=self._cookie_max_age)
-            return OAuthState(state=payload["state"], nonce=payload["nonce"])
+            return OAuthState(
+                state=payload["state"],
+                nonce=payload["nonce"],
+                app=payload.get("app"),
+                redirect_uri=payload.get("redirect_uri"),
+                session_cookie_domain=payload.get("session_cookie_domain"),
+            )
         except (BadSignature, BadTimeSignature):
             return None
 

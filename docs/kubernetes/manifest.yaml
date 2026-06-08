@@ -43,6 +43,9 @@ spec:
           volumeMounts:
             - name: google-credentials
               mountPath: /app/credentials
+            - name: login-apps-config
+              mountPath: /etc/google-authz
+              readOnly: true
                         
         - name: redis
           image: redis:7.0.11-alpine
@@ -52,7 +55,9 @@ spec:
         - name: google-credentials
           secret:
             secretName: google-service-secret
+        - name: login-apps-config
+          configMap:
+            name: authz-login-apps
             
-
 
 

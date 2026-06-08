@@ -1,10 +1,11 @@
 # google-authz
 
-Authorization, session, and workspace-inventory service for Google Workspace tenants. `google-authz` centralizes the login flow, caches effective authorization documents, and exposes HTTP endpoints (`/login`, `/session`, `/authz`, `/authz/check`) so your apps can enforce scopes consistently.
+Authorization, session, and workspace-inventory service for Google Workspace tenants. `google-authz` centralizes the login flow, caches effective authorization documents, and exposes HTTP endpoints (`/login`, `/login/app`, `/session`, `/authz`, `/authz/check`) so your apps can enforce scopes consistently.
 
 ## Features
 - **Google Workspace aware** – fetches directory groups, schemas, and custom attributes to build an `EffectiveAuth` document per user.
 - **Session + token exchange** – OAuth-based login plus signed session cookies for zero-trust APIs.
+- **Browser app login** – `/login/app` validates first-party app redirects from a ConfigMap-backed registry.
 - **Declarative enforcement** – `/authz/check` evaluates module/action pairs and returns permitted verbs for UI gating.
 - **Framework helpers** – FastAPI/Flask/Django helpers ship in [`google-authz-client`](https://github.com/example/google-authz-client) for easy integration.
 - **Redis caching** – pluggable cache keeps `/authz` hot while respecting TTL + warm thresholds.
@@ -40,6 +41,8 @@ Core settings live in `.env` and are documented in detail in [`docs/config.md`](
 
 `/authz` and `/authz/check` accept exactly one token per request: `id_token`, `session_token`, or `access_token`.
 
+First-party browser apps should use `/login/app` with an app registry entry, then call `/authz` with the returned session cookie as a `session_token`. See [`docs/browser-app-login.md`](docs/browser-app-login.md).
+
 ## Architecture
 The login and authorization exchange follow a simple set of hops:
 
@@ -49,6 +52,7 @@ The editable SVG lives at [`docs/img/architecture-v0.6.svg`](docs/img/architectu
 
 ## Deployment Guides
 - [`docs/deployment.md`](docs/deployment.md) – Docker Compose walkthrough, Kubernetes notes, and secrets management tips.
+- [`docs/browser-app-login.md`](docs/browser-app-login.md) – ConfigMap-backed browser app login flow and consuming app implementation.
 - [`docs/kubernetes/`](docs/kubernetes/README.md) – Manifest suite example for namespaces, secrets, and ingress.
 - [`examples/`](examples) – React client, FastAPI backend, and Vite starter templates wired to `/login`, `/session`, and `/authz/check`.
 
