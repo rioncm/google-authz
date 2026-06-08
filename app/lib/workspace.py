@@ -12,7 +12,7 @@ BASE_SCOPES = [
     "https://www.googleapis.com/auth/admin.directory.group.readonly",
     "https://www.googleapis.com/auth/admin.directory.user.readonly",
 ]
-DEFAULT_CUSTOM_SCHEMAS = ("EmployeeInfo",)
+DEFAULT_CUSTOM_SCHEMAS: Tuple[str, ...] = ("EmployeeInfo",)
 
 
 class WorkspaceError(Exception):
@@ -148,10 +148,22 @@ class WorkspaceAuthorizationService:
         user = self._client.get_user(email)
         groups_response = self._client.list_groups(email)
         groups = [group["email"] for group in groups_response.get("groups", []) if "email" in group]
+        self._logger.debug(
+            "Workspace user customSchemas for %s: %s",
+            email,
+            user.get("customSchemas") or {},
+        )
 
         custom_schema = self._extract_custom_schema(user)
         functions = self._coerce_list(custom_schema.get(self.RBAC_KEY))
         custom_schemas = self._extract_extra_schemas(user)
+        self._logger.debug(
+            "Auth schema '%s' RBAC raw=%s parsed=%s",
+            self._settings.google_auth_schema,
+            custom_schema.get(self.RBAC_KEY),
+            functions,
+        )
+        self._logger.debug("Extra schemas parsed for %s: %s", email, custom_schemas)
 
         effective_auth = EffectiveAuth(
             email=user.get("primaryEmail", email).lower(),
