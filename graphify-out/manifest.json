@@ -1,0 +1,137 @@
+{
+  "app/__init__.py": {
+    "mtime": 1764906982.5276415,
+    "ast_hash": "e60e555e54e6f894ff5c712981f8a1ff",
+    "semantic_hash": "e60e555e54e6f894ff5c712981f8a1ff"
+  },
+  "app/lib/cache.py": {
+    "mtime": 1765205633.8529613,
+    "ast_hash": "8f9c5dbeb387da8ec41b372234d86778",
+    "semantic_hash": "8f9c5dbeb387da8ec41b372234d86778"
+  },
+  "app/lib/config.py": {
+    "mtime": 1780944222.3406062,
+    "ast_hash": "5b4a894738981cd92605df1c43def02c",
+    "semantic_hash": "5b4a894738981cd92605df1c43def02c"
+  },
+  "app/lib/logging_config.py": {
+    "mtime": 1764906944.440319,
+    "ast_hash": "7f5b91989fd8251c8d2ee527c711bcb0",
+    "semantic_hash": "7f5b91989fd8251c8d2ee527c711bcb0"
+  },
+  "app/lib/login_apps.py": {
+    "mtime": 1780946408.4405801,
+    "ast_hash": "0af29eecb21626d9a9ca9043388d97d0",
+    "semantic_hash": "0af29eecb21626d9a9ca9043388d97d0"
+  },
+  "app/lib/models.py": {
+    "mtime": 1767034958.7473865,
+    "ast_hash": "343a656609215dfbb806a6a9297584f7",
+    "semantic_hash": "343a656609215dfbb806a6a9297584f7"
+  },
+  "app/lib/network.py": {
+    "mtime": 1766622352.554383,
+    "ast_hash": "5f802a41b5e460bf5e045e5c3aa21369",
+    "semantic_hash": "5f802a41b5e460bf5e045e5c3aa21369"
+  },
+  "app/lib/oauth.py": {
+    "mtime": 1780946904.583926,
+    "ast_hash": "e96ed995048fcd48bf9de1c629232058",
+    "semantic_hash": "e96ed995048fcd48bf9de1c629232058"
+  },
+  "app/lib/rate_limit.py": {
+    "mtime": 1765246080.599425,
+    "ast_hash": "42cc387f6010d3b9c5b0713942a821e8",
+    "semantic_hash": "42cc387f6010d3b9c5b0713942a821e8"
+  },
+  "app/lib/session.py": {
+    "mtime": 1780947587.4769661,
+    "ast_hash": "536d8689c35762c17b7eef8f19fbf9d6",
+    "semantic_hash": "536d8689c35762c17b7eef8f19fbf9d6"
+  },
+  "app/lib/workspace.py": {
+    "mtime": 1767038547.2643154,
+    "ast_hash": "183488a4933c94e65403221393284176",
+    "semantic_hash": "183488a4933c94e65403221393284176"
+  },
+  "app/main.py": {
+    "mtime": 1780947686.941734,
+    "ast_hash": "c33fabdb364db4f28dd4e4047be026d1",
+    "semantic_hash": "c33fabdb364db4f28dd4e4047be026d1"
+  },
+  "docs/directory_v1_api.json": {
+    "mtime": 1765239931.639618,
+    "ast_hash": "f0ff0b77dd7a33d8c46355c329d5fdc0",
+    "semantic_hash": "f0ff0b77dd7a33d8c46355c329d5fdc0"
+  },
+  "examples/fastapi-backend/main.py": {
+    "mtime": 1765305130.6377575,
+    "ast_hash": "4625ab9145611b4b0d411f210f8a84a4",
+    "semantic_hash": "4625ab9145611b4b0d411f210f8a84a4"
+  },
+  "examples/react-client/package.json": {
+    "mtime": 1765305061.7760942,
+    "ast_hash": "536b93e28b82f261f709c5653e82e4c6",
+    "semantic_hash": "536b93e28b82f261f709c5653e82e4c6"
+  },
+  "examples/react-client/src/App.jsx": {
+    "mtime": 1765305072.0319836,
+    "ast_hash": "3953b456db004f85ccb7fb34be0a4c3b",
+    "semantic_hash": "3953b456db004f85ccb7fb34be0a4c3b"
+  },
+  "examples/react-client/src/main.jsx": {
+    "mtime": 1765305066.3403285,
+    "ast_hash": "0644eb225a1ac9ff6baa01c924477700",
+    "semantic_hash": "0644eb225a1ac9ff6baa01c924477700"
+  },
+  "examples/react-client/vite.config.js": {
+    "mtime": 1765305362.8043208,
+    "ast_hash": "dfa2b2eab9d67a5cc4eb016dbe345220",
+    "semantic_hash": "dfa2b2eab9d67a5cc4eb016dbe345220"
+  },
+  "examples/vite-starter/package.json": {
+    "mtime": 1765305093.3808465,
+    "ast_hash": "d81bcfee1b49a837d22fa323b5601920",
+    "semantic_hash": "d81bcfee1b49a837d22fa323b5601920"
+  },
+  "examples/vite-starter/src/App.jsx": {
+    "mtime": 1765305335.1885984,
+    "ast_hash": "6c79dc6af2a652274a6c47de9505fe65",
+    "semantic_hash": "6c79dc6af2a652274a6c47de9505fe65"
+  },
+  "examples/vite-starter/src/lib/authzClient.js": {
+    "mtime": 1765305256.1174967,
+    "ast_hash": "b6fcda858dfee53fbefc332ba586e29d",
+    "semantic_hash": "b6fcda858dfee53fbefc332ba586e29d"
+  },
+  "examples/vite-starter/src/lib/useSession.js": {
+    "mtime": 1765305107.4309175,
+    "ast_hash": "3ee5eda4500beba9f5f464d9d254ff1c",
+    "semantic_hash": "3ee5eda4500beba9f5f464d9d254ff1c"
+  },
+  "examples/vite-starter/src/main.jsx": {
+    "mtime": 1765305099.131774,
+    "ast_hash": "0170e07cf7f475d5819080d0d3e652fc",
+    "semantic_hash": "0170e07cf7f475d5819080d0d3e652fc"
+  },
+  "examples/vite-starter/vite.config.js": {
+    "mtime": 1765305096.0271838,
+    "ast_hash": "559992b35fe0e61046d99d3a80f23bde",
+    "semantic_hash": "559992b35fe0e61046d99d3a80f23bde"
+  },
+  "tests/test_login_app_session.py": {
+    "mtime": 1780953838.6470385,
+    "ast_hash": "57cee39f12eb210b46e9d9611490abed",
+    "semantic_hash": "57cee39f12eb210b46e9d9611490abed"
+  },
+  "tests/test_login_apps.py": {
+    "mtime": 1780951422.003992,
+    "ast_hash": "406ebc8adbbb937ee260340c19c3dc7c",
+    "semantic_hash": "406ebc8adbbb937ee260340c19c3dc7c"
+  },
+  "tests/test_readme_exists.py": {
+    "mtime": 1765327240.037251,
+    "ast_hash": "0ca2022429d3ad15d85ebe754d623304",
+    "semantic_hash": "0ca2022429d3ad15d85ebe754d623304"
+  }
+}

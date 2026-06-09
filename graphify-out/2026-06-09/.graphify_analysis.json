@@ -1,0 +1,744 @@
+{
+  "communities": {
+    "0": [
+      "app_lib_config_py_path",
+      "app_lib_session_py_response",
+      "app_lib_session_py_settings",
+      "app_lib_workspace_py_settings",
+      "app_main_authzcheckrequest",
+      "app_main_authzcheckrequest_validate_action",
+      "app_main_authzcheckrequest_validate_module",
+      "app_main_authzcheckresponse",
+      "app_main_authzrequest",
+      "app_main_authzresponse",
+      "app_main_authztokenpayload",
+      "app_main_authztokenpayload_validate_token_choice",
+      "app_main_lifespan",
+      "app_main_login",
+      "app_main_login_app",
+      "app_main_py_effectiveauth",
+      "app_main_py_response",
+      "app_main_sessionmetadata",
+      "app_main_sessionrefreshrequest",
+      "app_main_sessionresponse",
+      "app_main_testauthrequest",
+      "basemodel",
+      "exception",
+      "fastapi",
+      "internalsession",
+      "lib_cache_cacherecord",
+      "lib_cache_cacherecord_ttl_remaining",
+      "lib_cache_effectiveauthcache",
+      "lib_cache_rationale_15",
+      "lib_cache_rationale_26",
+      "lib_config_rationale_21",
+      "lib_config_settings",
+      "lib_config_settings_parse_additional_scopes",
+      "lib_config_settings_parse_allowed_networks",
+      "lib_config_settings_parse_allowed_origins",
+      "lib_config_settings_validate_service_account_path",
+      "lib_login_apps_loginappregistry",
+      "lib_login_apps_loginappregistry_cookie_domains",
+      "lib_models",
+      "lib_models_effectiveauth",
+      "lib_models_rationale_19",
+      "lib_models_rationale_8",
+      "lib_models_workspaceauthresponse",
+      "lib_network",
+      "lib_network_networkacl",
+      "lib_network_networkacl_init",
+      "lib_network_networkacl_is_allowed",
+      "lib_network_networkacl_load",
+      "lib_network_rationale_9",
+      "lib_oauth_oauthstatemanager",
+      "lib_oauth_rationale_38",
+      "lib_rate_limit",
+      "lib_rate_limit_ratelimiter",
+      "lib_rate_limit_ratelimiter_allow",
+      "lib_rate_limit_ratelimiter_init",
+      "lib_rate_limit_rationale_8",
+      "lib_session",
+      "lib_session_internalsession",
+      "lib_session_rationale_23",
+      "lib_session_rationale_27",
+      "lib_session_sessionerror",
+      "lib_session_sessionmanager",
+      "lib_session_sessionmanager_clear_cookie",
+      "lib_session_sessionmanager_create_session",
+      "lib_session_sessionmanager_encode",
+      "lib_session_sessionmanager_init",
+      "lib_session_sessionmanager_requires_refresh",
+      "lib_session_sessionmanager_set_cookie",
+      "lib_workspace",
+      "lib_workspace_rationale_19",
+      "lib_workspace_rationale_23",
+      "lib_workspace_workspacedirectoryclient",
+      "lib_workspace_workspacedirectoryclient_build_custom_field_mask",
+      "lib_workspace_workspacedirectoryclient_build_scopes",
+      "lib_workspace_workspacedirectoryclient_extra_schemas",
+      "lib_workspace_workspacedirectoryclient_init",
+      "lib_workspace_workspacedirectoryclient_load_schema_field_types",
+      "lib_workspace_workspacedirectoryclient_normalize_extra_schemas",
+      "lib_workspace_workspacedirectoryclient_schema_field_types",
+      "lib_workspace_workspaceerror",
+      "loginappregistry",
+      "networkacl",
+      "oauthservice",
+      "ratelimiter",
+      "tests_test_login_app_session",
+      "tests_test_login_app_session_py_request",
+      "tests_test_login_app_session_request_with_cookie",
+      "tests_test_login_app_session_test_oauth_state_preserves_login_app_metadata",
+      "tests_test_login_app_session_test_session_cookie_can_be_scoped_to_parent_domain",
+      "workspaceauthresponse"
+    ],
+    "1": [
+      "app_lib_session_py_request",
+      "app_main",
+      "app_main_auth_callback",
+      "app_main_authz",
+      "app_main_authz_check",
+      "app_main_build_session_response",
+      "app_main_cache_key_for_email",
+      "app_main_enforce_authz_request_guards",
+      "app_main_ensure_origin_allowed",
+      "app_main_error_payload",
+      "app_main_fetch_and_cache_effective_auth",
+      "app_main_gather_module_permissions",
+      "app_main_get_app_settings",
+      "app_main_get_authorization_profile",
+      "app_main_get_cache",
+      "app_main_get_login_app_registry",
+      "app_main_get_network_acl",
+      "app_main_get_oauth_service",
+      "app_main_get_rate_limiter",
+      "app_main_get_request_ip",
+      "app_main_get_session_manager",
+      "app_main_get_workspace_service",
+      "app_main_health",
+      "app_main_live",
+      "app_main_logout",
+      "app_main_map_cache_source",
+      "app_main_me",
+      "app_main_normalize_permission_parts",
+      "app_main_permission_eval_response",
+      "app_main_py_request",
+      "app_main_py_settings",
+      "app_main_resolve_effective_auth_for_cache_key",
+      "app_main_resolve_effective_auth_for_session",
+      "app_main_resolve_identity_from_payload",
+      "app_main_session_details",
+      "app_main_session_refresh",
+      "effectiveauthcache",
+      "lib_logging_config",
+      "lib_logging_config_configure_logging",
+      "lib_logging_config_rationale_6",
+      "lib_session_require_session_token",
+      "lib_session_sessionmanager_decode",
+      "lib_session_sessionmanager_get_token_from_request",
+      "sessionmanager",
+      "workspaceauthorizationservice"
+    ],
+    "2": [
+      "docs_directory_v1_api_alt_default",
+      "docs_directory_v1_api_alt_enum",
+      "docs_directory_v1_api_alt_enumdescriptions",
+      "docs_directory_v1_api_alt_location",
+      "docs_directory_v1_api_alt_type",
+      "docs_directory_v1_api_customer_required",
+      "docs_directory_v1_api_description",
+      "docs_directory_v1_api_maxresults_format",
+      "docs_directory_v1_api_maxresults_minimum",
+      "docs_directory_v1_api_parameters",
+      "docs_directory_v1_api_parameters_access_token",
+      "docs_directory_v1_api_parameters_alt",
+      "docs_directory_v1_api_parameters_callback",
+      "docs_directory_v1_api_parameters_customerid",
+      "docs_directory_v1_api_parameters_deviceid",
+      "docs_directory_v1_api_parameters_domainaliasname",
+      "docs_directory_v1_api_parameters_fields",
+      "docs_directory_v1_api_parameters_groupkey",
+      "docs_directory_v1_api_parameters_includechildorgunits",
+      "docs_directory_v1_api_parameters_includederivedmembership",
+      "docs_directory_v1_api_parameters_key",
+      "docs_directory_v1_api_parameters_maxresults",
+      "docs_directory_v1_api_parameters_memberkey",
+      "docs_directory_v1_api_parameters_oauth_token",
+      "docs_directory_v1_api_parameters_orderby",
+      "docs_directory_v1_api_parameters_orgunitpath",
+      "docs_directory_v1_api_parameters_pagetoken",
+      "docs_directory_v1_api_parameters_parentdomainname",
+      "docs_directory_v1_api_parameters_prettyprint",
+      "docs_directory_v1_api_parameters_projection",
+      "docs_directory_v1_api_parameters_query",
+      "docs_directory_v1_api_parameters_quotauser",
+      "docs_directory_v1_api_parameters_resourceid",
+      "docs_directory_v1_api_parameters_roles",
+      "docs_directory_v1_api_parameters_sortorder",
+      "docs_directory_v1_api_parameters_upload_protocol",
+      "docs_directory_v1_api_parameters_uploadtype",
+      "docs_directory_v1_api_parameters_xgafv",
+      "docs_directory_v1_api_resources_customer"
+    ],
+    "3": [
+      "docs_directory_v1_api_action_deprecated",
+      "docs_directory_v1_api_get_flatpath",
+      "docs_directory_v1_api_get_httpmethod",
+      "docs_directory_v1_api_get_parameterorder",
+      "docs_directory_v1_api_get_path",
+      "docs_directory_v1_api_get_response",
+      "docs_directory_v1_api_get_scopes",
+      "docs_directory_v1_api_id",
+      "docs_directory_v1_api_members_methods",
+      "docs_directory_v1_api_methods_action",
+      "docs_directory_v1_api_methods_delete",
+      "docs_directory_v1_api_methods_get",
+      "docs_directory_v1_api_methods_hasmember",
+      "docs_directory_v1_api_methods_insert",
+      "docs_directory_v1_api_methods_list",
+      "docs_directory_v1_api_methods_movedevicestoou",
+      "docs_directory_v1_api_methods_patch",
+      "docs_directory_v1_api_methods_update",
+      "docs_directory_v1_api_patch_request",
+      "docs_directory_v1_api_request_ref",
+      "docs_directory_v1_api_resources",
+      "docs_directory_v1_api_resources_chromeos",
+      "docs_directory_v1_api_resources_chromeosdevices",
+      "docs_directory_v1_api_resources_devices",
+      "docs_directory_v1_api_resources_domainaliases",
+      "docs_directory_v1_api_resources_members",
+      "docs_directory_v1_api_scopes_https_www_googleapis_com_auth_admin_chrome_printers",
+      "docs_directory_v1_api_scopes_https_www_googleapis_com_auth_admin_chrome_printers_readonly",
+      "docs_directory_v1_api_scopes_https_www_googleapis_com_auth_admin_directory_rolemanagement",
+      "docs_directory_v1_api_scopes_https_www_googleapis_com_auth_admin_directory_rolemanagement_readonly",
+      "docs_directory_v1_api_scopes_https_www_googleapis_com_auth_admin_directory_user",
+      "docs_directory_v1_api_scopes_https_www_googleapis_com_auth_cloud_platform"
+    ],
+    "4": [
+      "app_lib_oauth_py_request",
+      "app_lib_oauth_py_response",
+      "app_lib_oauth_py_settings",
+      "flow",
+      "lib_oauth",
+      "lib_oauth_oauthservice",
+      "lib_oauth_oauthservice_allowed_audiences",
+      "lib_oauth_oauthservice_build_authorization_url",
+      "lib_oauth_oauthservice_build_flow",
+      "lib_oauth_oauthservice_exchange_code_for_user",
+      "lib_oauth_oauthservice_fetch_access_token_info",
+      "lib_oauth_oauthservice_fetch_userinfo",
+      "lib_oauth_oauthservice_state_manager",
+      "lib_oauth_oauthservice_validate_access_token_info",
+      "lib_oauth_oauthservice_validate_token_info",
+      "lib_oauth_oauthservice_verify_access_token",
+      "lib_oauth_oauthservice_verify_id_token",
+      "lib_oauth_oauthstate",
+      "lib_oauth_oauthstate_init",
+      "lib_oauth_oauthstatemanager_clear_cookie",
+      "lib_oauth_oauthstatemanager_generate",
+      "lib_oauth_oauthstatemanager_load_from_request",
+      "lib_oauth_oauthstatemanager_save_to_response",
+      "lib_oauth_rationale_110"
+    ],
+    "5": [
+      "app_lib_workspace_py_any",
+      "app_lib_workspace_py_effectiveauth",
+      "lib_workspace_rationale_114",
+      "lib_workspace_rationale_138",
+      "lib_workspace_rationale_98",
+      "lib_workspace_workspaceauthorizationservice",
+      "lib_workspace_workspaceauthorizationservice_coerce_bool",
+      "lib_workspace_workspaceauthorizationservice_coerce_list",
+      "lib_workspace_workspaceauthorizationservice_coerce_scalar",
+      "lib_workspace_workspaceauthorizationservice_derive_permissions",
+      "lib_workspace_workspaceauthorizationservice_extract_custom_schema",
+      "lib_workspace_workspaceauthorizationservice_extract_extra_schemas",
+      "lib_workspace_workspaceauthorizationservice_fetch_effective_auth",
+      "lib_workspace_workspaceauthorizationservice_flatten_list",
+      "lib_workspace_workspaceauthorizationservice_normalize_field_values",
+      "lib_workspace_workspaceauthorizationservice_normalize_permission",
+      "lib_workspace_workspaceauthorizationservice_normalize_schema_fields",
+      "lib_workspace_workspaceauthorizationservice_slugify",
+      "lib_workspace_workspacedirectoryclient_get_user",
+      "lib_workspace_workspacedirectoryclient_list_groups"
+    ],
+    "6": [
+      "docs_directory_v1_api",
+      "docs_directory_v1_api_auth",
+      "docs_directory_v1_api_auth_oauth2",
+      "docs_directory_v1_api_basepath",
+      "docs_directory_v1_api_baseurl",
+      "docs_directory_v1_api_batchpath",
+      "docs_directory_v1_api_canonicalname",
+      "docs_directory_v1_api_documentationlink",
+      "docs_directory_v1_api_fullyencodereservedexpansion",
+      "docs_directory_v1_api_kind",
+      "docs_directory_v1_api_mtlsrooturl",
+      "docs_directory_v1_api_name",
+      "docs_directory_v1_api_ownerdomain",
+      "docs_directory_v1_api_ownername",
+      "docs_directory_v1_api_packagepath",
+      "docs_directory_v1_api_protocol",
+      "docs_directory_v1_api_revision",
+      "docs_directory_v1_api_rooturl",
+      "docs_directory_v1_api_servicepath",
+      "docs_directory_v1_api_version"
+    ],
+    "7": [
+      "app_lib_cache_py_effectiveauth",
+      "app_lib_cache_py_settings",
+      "lib_cache",
+      "lib_cache_build_cache",
+      "lib_cache_inmemorycache",
+      "lib_cache_rationale_108",
+      "lib_cache_rationale_42",
+      "lib_cache_rationale_73",
+      "lib_cache_rediscache",
+      "lib_cache_rediscache_close",
+      "lib_cache_rediscache_delete",
+      "lib_cache_rediscache_get",
+      "lib_cache_rediscache_init",
+      "lib_cache_rediscache_set",
+      "redis"
+    ],
+    "8": [
+      "react_client_package",
+      "react_client_package_dependencies",
+      "react_client_package_dependencies_react",
+      "react_client_package_dependencies_react_dom",
+      "react_client_package_devdependencies",
+      "react_client_package_devdependencies_vite",
+      "react_client_package_devdependencies_vitejs_plugin_react",
+      "react_client_package_name",
+      "react_client_package_private",
+      "react_client_package_scripts",
+      "react_client_package_scripts_build",
+      "react_client_package_scripts_dev",
+      "react_client_package_scripts_preview",
+      "react_client_package_type",
+      "react_client_package_version"
+    ],
+    "9": [
+      "vite_starter_package",
+      "vite_starter_package_dependencies",
+      "vite_starter_package_dependencies_react",
+      "vite_starter_package_dependencies_react_dom",
+      "vite_starter_package_devdependencies",
+      "vite_starter_package_devdependencies_vite",
+      "vite_starter_package_devdependencies_vitejs_plugin_react",
+      "vite_starter_package_name",
+      "vite_starter_package_private",
+      "vite_starter_package_scripts",
+      "vite_starter_package_scripts_build",
+      "vite_starter_package_scripts_dev",
+      "vite_starter_package_scripts_preview",
+      "vite_starter_package_type",
+      "vite_starter_package_version"
+    ],
+    "10": [
+      "depends",
+      "examples_fastapi_backend_main_py_request",
+      "fastapi_backend_main",
+      "fastapi_backend_main_authzcheckresponse",
+      "fastapi_backend_main_get_settings",
+      "fastapi_backend_main_inventory",
+      "fastapi_backend_main_require_permission",
+      "fastapi_backend_main_require_session",
+      "fastapi_backend_main_settings"
+    ],
+    "11": [
+      "lib_login_apps",
+      "lib_login_apps_loginapp_normalize_app",
+      "lib_login_apps_loginapp_normalize_domains",
+      "lib_login_apps_loginapp_normalize_string_list",
+      "lib_login_apps_loginapp_validate_redirects",
+      "lib_login_apps_loginappregistry_init",
+      "lib_login_apps_loginappregistry_validate_redirect"
+    ],
+    "12": [
+      "examples_vite_starter_src_app_jsx_src_app",
+      "examples_vite_starter_src_app_jsx_src_app_app",
+      "lib_authzclient",
+      "lib_authzclient_checkpermission",
+      "lib_usesession",
+      "lib_usesession_usesession"
+    ],
+    "13": [
+      "tests_test_login_apps",
+      "tests_test_login_apps_py_path",
+      "tests_test_login_apps_test_login_app_registry_rejects_unapproved_redirect",
+      "tests_test_login_apps_test_login_app_registry_rejects_unknown_app",
+      "tests_test_login_apps_test_login_app_registry_validates_approved_redirect"
+    ],
+    "14": [
+      "app_lib_login_apps_py_any",
+      "app_lib_login_apps_py_path",
+      "lib_login_apps_loginappregistry_as_dict",
+      "lib_login_apps_loginappregistry_from_file"
+    ],
+    "15": [
+      "lib_config",
+      "lib_config_get_settings",
+      "lib_config_rationale_136",
+      "lib_config_split_env_list"
+    ],
+    "16": [
+      "app_init",
+      "app_init_rationale_1"
+    ],
+    "17": [
+      "examples_react_client_src_app_jsx_src_app",
+      "examples_react_client_src_app_jsx_src_app_app"
+    ],
+    "18": [
+      "tests_test_readme_exists",
+      "tests_test_readme_exists_test_readme_present"
+    ],
+    "19": [
+      "changelog_changelog"
+    ],
+    "20": [
+      "code_of_conduct_code_of_conduct"
+    ],
+    "21": [
+      "contributing_contributing"
+    ],
+    "22": [
+      "docker_compose_local_docker_compose_local_yml"
+    ],
+    "23": [
+      "docs_authz_endpoints"
+    ],
+    "24": [
+      "docs_browser_app_login"
+    ],
+    "25": [
+      "docs_config"
+    ],
+    "26": [
+      "docs_deployment"
+    ],
+    "27": [
+      "docs_dev_docs_answers_v01"
+    ],
+    "28": [
+      "docs_dev_docs_roadmap"
+    ],
+    "29": [
+      "docs_dev_docs_scope"
+    ],
+    "30": [
+      "docs_dev_docs_scopev0_1"
+    ],
+    "31": [
+      "docs_dev_docs_scopev0_2"
+    ],
+    "32": [
+      "docs_dev_docs_scopev0_2a"
+    ],
+    "33": [
+      "docs_dev_docs_scopev0_3"
+    ],
+    "34": [
+      "docs_dev_docs_scopev0_4"
+    ],
+    "35": [
+      "docs_dev_docs_scopev0_5"
+    ],
+    "36": [
+      "docs_dev_docs_scopev0_6"
+    ],
+    "37": [
+      "docs_dev_docs_scopev0_7"
+    ],
+    "38": [
+      "docs_dev_docs_security"
+    ],
+    "39": [
+      "docs_helpers_login_integration_review"
+    ],
+    "40": [
+      "docs_img_architecture_v0_6_png"
+    ],
+    "41": [
+      "docs_kubernetes_env_config_yaml"
+    ],
+    "42": [
+      "docs_kubernetes_ingress_yaml"
+    ],
+    "43": [
+      "docs_kubernetes_login_apps_config_yaml"
+    ],
+    "44": [
+      "docs_kubernetes_manifest_yaml"
+    ],
+    "45": [
+      "docs_kubernetes_namespace_yaml"
+    ],
+    "46": [
+      "docs_kubernetes_readme"
+    ],
+    "47": [
+      "examples_fastapi_backend_readme"
+    ],
+    "48": [
+      "examples_fastapi_backend_requirements_txt"
+    ],
+    "49": [
+      "examples_react_client_index_html"
+    ],
+    "50": [
+      "examples_react_client_readme"
+    ],
+    "51": [
+      "examples_react_client_src_main_jsx_src_main"
+    ],
+    "52": [
+      "examples_vite_starter_index_html"
+    ],
+    "53": [
+      "examples_vite_starter_readme"
+    ],
+    "54": [
+      "examples_vite_starter_src_main_jsx_src_main"
+    ],
+    "55": [
+      "github_issue_template_bug_report"
+    ],
+    "56": [
+      "github_issue_template_config"
+    ],
+    "57": [
+      "github_issue_template_feature_request"
+    ],
+    "58": [
+      "github_pull_request_template"
+    ],
+    "59": [
+      "github_release_template"
+    ],
+    "60": [
+      "github_workflows_ci_yml"
+    ],
+    "61": [
+      "kubernetes_env_config_yaml"
+    ],
+    "62": [
+      "kubernetes_ingress_yaml"
+    ],
+    "63": [
+      "kubernetes_login_apps_config_yaml"
+    ],
+    "64": [
+      "kubernetes_manifest_yaml"
+    ],
+    "65": [
+      "kubernetes_namespace_yaml"
+    ],
+    "66": [
+      "kubernetes_readme"
+    ],
+    "67": [
+      "react_client_vite_config"
+    ],
+    "68": [
+      "readme_readme"
+    ],
+    "69": [
+      "requirements_requirements_txt"
+    ],
+    "70": [
+      "security_security"
+    ],
+    "71": [
+      "vite_starter_vite_config"
+    ]
+  },
+  "cohesion": {
+    "0": 0.0898876404494382,
+    "1": 0.13333333333333333,
+    "2": 0.18758434547908232,
+    "3": 0.1774193548387097,
+    "4": 0.13043478260869565,
+    "5": 0.21578947368421053,
+    "6": 0.1,
+    "7": 0.21904761904761905,
+    "8": 0.13333333333333333,
+    "9": 0.13333333333333333,
+    "10": 0.4444444444444444,
+    "11": 0.2857142857142857,
+    "12": 0.5333333333333333,
+    "13": 0.6,
+    "14": 0.3333333333333333,
+    "15": 0.5,
+    "16": 1.0,
+    "17": 1.0,
+    "18": 1.0,
+    "19": 1.0,
+    "20": 1.0,
+    "21": 1.0,
+    "22": 1.0,
+    "23": 1.0,
+    "24": 1.0,
+    "25": 1.0,
+    "26": 1.0,
+    "27": 1.0,
+    "28": 1.0,
+    "29": 1.0,
+    "30": 1.0,
+    "31": 1.0,
+    "32": 1.0,
+    "33": 1.0,
+    "34": 1.0,
+    "35": 1.0,
+    "36": 1.0,
+    "37": 1.0,
+    "38": 1.0,
+    "39": 1.0,
+    "40": 1.0,
+    "41": 1.0,
+    "42": 1.0,
+    "43": 1.0,
+    "44": 1.0,
+    "45": 1.0,
+    "46": 1.0,
+    "47": 1.0,
+    "48": 1.0,
+    "49": 1.0,
+    "50": 1.0,
+    "51": 1.0,
+    "52": 1.0,
+    "53": 1.0,
+    "54": 1.0,
+    "55": 1.0,
+    "56": 1.0,
+    "57": 1.0,
+    "58": 1.0,
+    "59": 1.0,
+    "60": 1.0,
+    "61": 1.0,
+    "62": 1.0,
+    "63": 1.0,
+    "64": 1.0,
+    "65": 1.0,
+    "66": 1.0,
+    "67": 1.0,
+    "68": 1.0,
+    "69": 1.0,
+    "70": 1.0,
+    "71": 1.0
+  },
+  "gods": [
+    {
+      "id": "lib_config_settings",
+      "label": "Settings",
+      "degree": 66
+    },
+    {
+      "id": "lib_models_effectiveauth",
+      "label": "EffectiveAuth",
+      "degree": 42
+    },
+    {
+      "id": "lib_workspace_workspaceauthorizationservice",
+      "label": "WorkspaceAuthorizationService",
+      "degree": 41
+    },
+    {
+      "id": "lib_oauth_oauthservice",
+      "label": "OAuthService",
+      "degree": 39
+    },
+    {
+      "id": "lib_session_sessionmanager",
+      "label": "SessionManager",
+      "degree": 39
+    },
+    {
+      "id": "docs_directory_v1_api_parameters",
+      "label": "parameters",
+      "degree": 39
+    },
+    {
+      "id": "lib_workspace_workspacedirectoryclient",
+      "label": "WorkspaceDirectoryClient",
+      "degree": 38
+    },
+    {
+      "id": "lib_oauth_oauthstatemanager",
+      "label": "OAuthStateManager",
+      "degree": 37
+    },
+    {
+      "id": "lib_cache_effectiveauthcache",
+      "label": "EffectiveAuthCache",
+      "degree": 35
+    },
+    {
+      "id": "app_main_py_request",
+      "label": "Request",
+      "degree": 33
+    }
+  ],
+  "surprises": [
+    {
+      "source": "Path",
+      "target": "LoginAppRegistry",
+      "source_files": [
+        "tests/test_login_apps.py",
+        "app/lib/login_apps.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "uses",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "Request",
+      "target": "Settings",
+      "source_files": [
+        "app/lib/oauth.py",
+        "app/lib/config.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "uses",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities; peripheral node `Request` unexpectedly reaches hub `Settings`"
+    },
+    {
+      "source": "Settings",
+      "target": "Settings",
+      "source_files": [
+        "app/lib/oauth.py",
+        "app/lib/config.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "uses",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities; peripheral node `Settings` unexpectedly reaches hub `Settings`"
+    },
+    {
+      "source": "Flow",
+      "target": "Settings",
+      "source_files": [
+        "app/lib/oauth.py",
+        "app/lib/config.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "uses",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities; peripheral node `Flow` unexpectedly reaches hub `Settings`"
+    },
+    {
+      "source": "Request",
+      "target": "Settings",
+      "source_files": [
+        "tests/test_login_app_session.py",
+        "app/lib/config.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "uses",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories"
+    }
+  ],
+  "tokens": {
+    "input": 28945,
+    "output": 2909
+  }
+}
