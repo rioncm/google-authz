@@ -1,5 +1,7 @@
 # google-authz Context
 
+Understand your human by [reading](about_rion_business.md)
+
 This repo is the server side of the shared Google Workspace authorization flow. It centralizes Google OAuth login, Workspace Directory lookups, EffectiveAuth caching, signed session cookies, and permission checks for internal apps.
 
 ## Current Shape
